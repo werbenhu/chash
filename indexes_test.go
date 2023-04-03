@@ -279,3 +279,16 @@ func BenchmarkIndexesMatch(b *testing.B) {
 		idx.Match(uint32(i))
 	}
 }
+
+func BenchmarkIndexesSearch(b *testing.B) {
+	idx := make(Indexes, 0)
+	for i := 0; i < 20000; i++ {
+		idx = append(idx, uint32(i))
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		val := b.N % 20000
+		idx.Search(uint32(val))
+	}
+}

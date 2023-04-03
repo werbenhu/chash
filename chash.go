@@ -117,7 +117,7 @@ func (c *CHash) Restore(data []byte) error {
 	for _, bucket := range c.buckets {
 		bucket.Init()
 		for _, node := range bucket.Agents {
-			bucket.Insert(node.Key, node.Payload)
+			bucket.hashAgent(node)
 		}
 	}
 	return nil

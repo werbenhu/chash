@@ -60,6 +60,16 @@ func (b *Bucket) virtualKey(key string, idx int) string {
 	return strconv.Itoa(idx) + key
 }
 
+func (b *Bucket) hashAgent(agent *Agent) {
+	for i := 0; i < b.NumberOfReplicas; i++ {
+		virtualKey := b.virtualKey(agent.Key, i)
+		crc := b.hash(virtualKey)
+		b.rows[crc] = agent
+		b.circle = append(b.circle, crc)
+	}
+	b.circle.Sort()
+}
+
 func (b *Bucket) Insert(key string, payload []byte) error {
 	agent := &Agent{Key: key, Payload: payload}
 	b.Lock()
@@ -68,15 +78,9 @@ func (b *Bucket) Insert(key string, payload []byte) error {
 	if _, ok := b.Agents[agent.Key]; ok {
 		return ErrKeyExisted
 	}
-	b.Agents[agent.Key] = agent
 
-	for i := 0; i < b.NumberOfReplicas; i++ {
-		virtualKey := b.virtualKey(key, i)
-		crc := b.hash(virtualKey)
-		b.rows[crc] = agent
-		b.circle = append(b.circle, crc)
-	}
-	b.circle.Sort()
+	b.Agents[agent.Key] = agent
+	b.hashAgent(agent)
 	return nil
 }
 

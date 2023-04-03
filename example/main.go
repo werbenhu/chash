@@ -1,9 +1,3 @@
-# chash
-Consistent Hashing written by go
-
-Usege:
-
-```
 package main
 
 import (
@@ -49,5 +43,3 @@ func main() {
 	}
 	fmt.Printf("user-id-1 matched db host:%+v, info:%s\n", user1DbHost, user1Dbinfo)
 }
-
-```

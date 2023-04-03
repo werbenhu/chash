@@ -1,5 +1,5 @@
 # chash
-Consistent Hashing written by Go
+Consistent hashing written by Go
 
 ### Getting chash
 

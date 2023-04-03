@@ -11,19 +11,25 @@ import (
 )
 
 func TestNewHash(t *testing.T) {
-	handler := &testHandler{}
 	hash := New()
-	hash.SetHandler(handler)
 	assert.NotNil(t, hash)
 	assert.NotNil(t, hash.buckets)
-	assert.Equal(t, handler, hash.handler)
+}
+
+func TestCHashGlobalCreateBucket(t *testing.T) {
+	bucket, err := CreateBucket("werbenhu1", 2000)
+	assert.NotNil(t, singleton)
+	assert.Nil(t, err)
+	assert.NotNil(t, bucket)
+	assert.Equal(t, "werbenhu1", bucket.Name)
+
+	bucket, err = CreateBucket("werbenhu1", 3000)
+	assert.Equal(t, ErrBucketExisted, err)
+	assert.Nil(t, bucket)
 }
 
 func TestCHashGetBucket(t *testing.T) {
-	handler := &testHandler{}
 	hash := New()
-	hash.SetHandler(handler)
-
 	err := hash.CreateBucket("werbenhu1", 2000)
 	assert.Nil(t, err)
 	bucket1, err := hash.GetBucket("werbenhu1")
@@ -36,15 +42,13 @@ func TestCHashGetBucket(t *testing.T) {
 }
 
 func TestCHashCreateBucket(t *testing.T) {
-	handler := &testHandler{}
 	hash := New()
-	hash.SetHandler(handler)
-
 	err := hash.CreateBucket("werbenhu1", 2000)
 	assert.Nil(t, err)
 	bucket1, err := hash.GetBucket("werbenhu1")
 	assert.Nil(t, err)
 	assert.NotNil(t, bucket1)
+	assert.Equal(t, "werbenhu1", bucket1.Name)
 
 	err = hash.CreateBucket("werbenhu1", 3000)
 	assert.Equal(t, ErrBucketExisted, err)
@@ -59,16 +63,14 @@ func TestCHashCreateBucket(t *testing.T) {
 	assert.NotNil(t, bucket2)
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(hash.buckets))
+	assert.Equal(t, "werbenhu2", bucket2.Name)
 
 	assert.Equal(t, bucket1, hash.buckets[bucket1.Name])
 	assert.Equal(t, bucket2, hash.buckets[bucket2.Name])
 }
 
 func TestCHashRemoveBucket(t *testing.T) {
-	handler := &testHandler{}
 	hash := New()
-	hash.SetHandler(handler)
-
 	err := hash.CreateBucket("werbenhu1", 2000)
 	assert.Nil(t, err)
 	bucket1, err := hash.GetBucket("werbenhu1")
@@ -90,10 +92,7 @@ func TestCHashRemoveBucket(t *testing.T) {
 }
 
 func TestCHashInsert(t *testing.T) {
-	handler := &testHandler{}
 	hash := New()
-	hash.SetHandler(handler)
-
 	hash.CreateBucket("werbenhu1", 10000)
 	err := hash.InsertAgent("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
 	assert.Nil(t, err)
@@ -146,10 +145,7 @@ func TestCHashInsert(t *testing.T) {
 }
 
 func TestCHashDeleteAgent(t *testing.T) {
-	handler := &testHandler{}
 	hash := New()
-	hash.SetHandler(handler)
-
 	hash.CreateBucket("werbenhu1", 10000)
 	hash.InsertAgent("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
 	hash.InsertAgent("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
@@ -173,10 +169,7 @@ func TestCHashDeleteAgent(t *testing.T) {
 }
 
 func TestCHashSerialize(t *testing.T) {
-	handler := &testHandler{}
 	hash := New()
-	hash.SetHandler(handler)
-
 	hash.CreateBucket("werbenhu1", 2000)
 	hash.CreateBucket("werbenhu2", 1000)
 
@@ -194,10 +187,7 @@ func TestCHashSerialize(t *testing.T) {
 }
 
 func TestCHashRestore(t *testing.T) {
-	handler := &testHandler{}
 	hash := New()
-	hash.SetHandler(handler)
-
 	data := []byte(`{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"agents":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"agents":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`)
 	err := hash.Restore(data)
 	assert.Nil(t, err)

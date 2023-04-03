@@ -27,13 +27,14 @@ func CreateBucket(bucketName string, replicas int) (*Bucket, error) {
 	if singleton == nil {
 		singleton = New()
 	}
-	singleton.CreateBucket(bucketName, replicas)
+	if err := singleton.CreateBucket(bucketName, replicas); err != nil {
+		return nil, err
+	}
 	return singleton.GetBucket(bucketName)
 }
 
 type CHash struct {
 	sync.RWMutex
-	handler Handler
 	buckets map[string]*Bucket
 }
 
@@ -41,10 +42,6 @@ func New() *CHash {
 	return &CHash{
 		buckets: make(map[string]*Bucket),
 	}
-}
-
-func (c *CHash) SetHandler(handler Handler) {
-	c.handler = handler
 }
 
 func (c *CHash) GetBucket(bucketName string) (*Bucket, error) {
@@ -58,44 +55,21 @@ func (c *CHash) GetBucket(bucketName string) (*Bucket, error) {
 }
 
 func (c *CHash) CreateBucket(bucketName string, replicas int) error {
-	c.RLock()
-	if _, ok := c.buckets[bucketName]; ok {
-		c.RUnlock()
-		return ErrBucketExisted
-	}
-	c.RUnlock()
-
-	bucket := NewBucket(bucketName, replicas, c.handler)
-	if c.handler != nil {
-		if err := c.handler.OnBucketCreate(bucket); err != nil {
-			return err
-		}
-	}
-
 	c.Lock()
 	defer c.Unlock()
+	if _, ok := c.buckets[bucketName]; ok {
+		return ErrBucketExisted
+	}
+
+	bucket := NewBucket(bucketName, replicas)
 	c.buckets[bucketName] = bucket
 	return nil
 }
 
-func (c *CHash) RemoveBucket(bucketName string) error {
-	c.RLock()
-	existing, ok := c.buckets[bucketName]
-	if !ok {
-		c.RUnlock()
-		return ErrBucketExisted
-	}
-	c.RUnlock()
-
-	if c.handler != nil {
-		if err := c.handler.OnBucketRemove(existing); err != nil {
-			return err
-		}
-	}
+func (c *CHash) RemoveBucket(bucketName string) {
 	c.Lock()
 	defer c.Unlock()
 	delete(c.buckets, bucketName)
-	return nil
 }
 
 func (c *CHash) InsertAgent(bucketName string, key string, payload []byte) error {

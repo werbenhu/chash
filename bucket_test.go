@@ -10,47 +10,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type testHandler struct {
-}
-
-func (t *testHandler) OnAgentInsert(name string, agent *Agent) error {
-	return nil
-}
-
-func (t *testHandler) OnAgentDelete(name string, agent *Agent) error {
-	return nil
-}
-
-func (t *testHandler) OnBucketCreate(bucket *Bucket) error {
-	return nil
-}
-
-func (t *testHandler) OnBucketRemove(bucket *Bucket) error {
-	return nil
-}
-
 func TestNewBucket(t *testing.T) {
-	handler := &testHandler{}
-	bucket := NewBucket("test", 10000, handler)
+	bucket := NewBucket("test", 10000)
 	assert.NotNil(t, bucket)
 	assert.NotNil(t, bucket.Agents)
 	assert.NotNil(t, bucket.circle)
 	assert.NotNil(t, bucket.rows)
 	assert.Equal(t, "test", bucket.Name)
 	assert.Equal(t, 10000, bucket.NumberOfReplicas)
-	assert.Equal(t, handler, bucket.handler)
-}
-
-func TestBucketSetHandler(t *testing.T) {
-	handler := &testHandler{}
-	bucket := NewBucket("test", 10000, nil)
-
-	assert.NotNil(t, bucket)
-	assert.Nil(t, bucket.handler)
-
-	bucket.SetHandler(handler)
-	assert.NotNil(t, bucket.handler)
-	assert.Equal(t, handler, bucket.handler)
 }
 
 func TestBucketInit(t *testing.T) {
@@ -62,8 +29,7 @@ func TestBucketInit(t *testing.T) {
 }
 
 func TestBucketInsert(t *testing.T) {
-	handler := &testHandler{}
-	bucket := NewBucket("test", 10000, handler)
+	bucket := NewBucket("test", 10000)
 
 	key, payload := "192.168.1.100:1883", []byte("werbenhu100")
 	bucket.Insert(key, payload)
@@ -77,8 +43,7 @@ func TestBucketInsert(t *testing.T) {
 }
 
 func TestBucketDelete(t *testing.T) {
-	handler := &testHandler{}
-	bucket := NewBucket("test", 10000, handler)
+	bucket := NewBucket("test", 10000)
 
 	key, payload := "192.168.1.100:1883", []byte("werbenhu100")
 	bucket.Insert(key, payload)
@@ -95,8 +60,7 @@ func TestBucketDelete(t *testing.T) {
 }
 
 func TestBucketMatch(t *testing.T) {
-	handler := &testHandler{}
-	bucket := NewBucket("test", 10000, handler)
+	bucket := NewBucket("test", 10000)
 
 	setKey, setPayload := "192.168.1.100:1883", []byte("werbenhu100")
 	bucket.Insert(setKey, setPayload)
@@ -113,8 +77,7 @@ func TestBucketMatch(t *testing.T) {
 }
 
 func TestBucketAll(t *testing.T) {
-	handler := &testHandler{}
-	bucket := NewBucket("test", 10000, handler)
+	bucket := NewBucket("test", 10000)
 	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))
 	assert.Equal(t, 10000, len(bucket.circle))
 	assert.Equal(t, 10000, len(bucket.rows))
@@ -150,17 +113,15 @@ func TestBucketAll(t *testing.T) {
 
 func BenchmarkBucketHash(b *testing.B) {
 	b.ResetTimer()
-	handler := &testHandler{}
 	key := "192.168.1.100:1883"
-	bucket := NewBucket("test", 10000, handler)
+	bucket := NewBucket("test", 10000)
 	for i := 0; i < b.N; i++ {
 		bucket.hash(bucket.virtualKey(key, i))
 	}
 }
 
 func BenchmarkBucketMatch(b *testing.B) {
-	handler := &testHandler{}
-	bucket := NewBucket("test", 10000, handler)
+	bucket := NewBucket("test", 10000)
 	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))
 	bucket.Insert("192.168.1.101:1883", []byte("werbenhu101"))
 

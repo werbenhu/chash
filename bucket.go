@@ -21,24 +21,18 @@ type Bucket struct {
 	NumberOfReplicas int               `json:"numberOfReplicas"`
 	Agents           map[string]*Agent `json:"agents"`
 
-	circle  Indexes
-	rows    map[uint32]*Agent
-	handler Handler
+	circle Indexes
+	rows   map[uint32]*Agent
 }
 
-func NewBucket(name string, replicas int, handler Handler) *Bucket {
+func NewBucket(name string, replicas int) *Bucket {
 	return &Bucket{
 		Name:             name,
 		NumberOfReplicas: replicas,
 		Agents:           make(map[string]*Agent),
-		handler:          handler,
 		circle:           make(Indexes, 0),
 		rows:             make(map[uint32]*Agent),
 	}
-}
-
-func (b *Bucket) SetHandler(handler Handler) {
-	b.handler = handler
 }
 
 func (b *Bucket) Init() {
@@ -68,12 +62,6 @@ func (b *Bucket) virtualKey(key string, idx int) string {
 
 func (b *Bucket) Insert(key string, payload []byte) error {
 	agent := &Agent{Key: key, Payload: payload}
-	if b.handler != nil {
-		if err := b.handler.OnAgentInsert(b.Name, agent); err != nil {
-			return err
-		}
-	}
-
 	b.Lock()
 	defer b.Unlock()
 	b.Agents[agent.Key] = agent
@@ -90,11 +78,6 @@ func (b *Bucket) Insert(key string, payload []byte) error {
 
 func (b *Bucket) Delete(key string) error {
 	agent := &Agent{Key: key, Payload: nil}
-	if b.handler != nil {
-		if err := b.handler.OnAgentDelete(b.Name, agent); err != nil {
-			return err
-		}
-	}
 	b.Lock()
 	defer b.Unlock()
 

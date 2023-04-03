@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2023 werbenhu
+// SPDX-FileContributor: werbenhu
+
 package chash
 
 import (
@@ -7,15 +11,15 @@ import (
 )
 
 type Agent struct {
-	Key     string
-	Payload []byte
+	Key     string `json:"key"`
+	Payload []byte `json:"payload"`
 }
 
 type Bucket struct {
 	sync.RWMutex
-	Name             string
-	NumberOfReplicas int
-	Agents           map[string]*Agent
+	Name             string            `json:"name"`
+	NumberOfReplicas int               `json:"numberOfReplicas"`
+	Agents           map[string]*Agent `json:"agents"`
 
 	circle  Indexes
 	rows    map[uint32]*Agent

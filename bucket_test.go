@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2023 werbenhu
+// SPDX-FileContributor: werbenhu
+
 package chash
 
 import (
@@ -49,7 +53,7 @@ func TestBucketInsert(t *testing.T) {
 	handler := &testHandler{}
 	bucket := NewBucket("test", 10000, handler)
 
-	bucket.Insert("192.168.1.100:1883", []byte("100"))
+	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))
 
 	assert.Equal(t, 10000, len(bucket.circle))
 	assert.Equal(t, 10000, len(bucket.rows))
@@ -59,7 +63,7 @@ func TestBucketInsert(t *testing.T) {
 func TestBucketDelete(t *testing.T) {
 	handler := &testHandler{}
 	bucket := NewBucket("test", 10000, handler)
-	bucket.Insert("192.168.1.100:1883", []byte("100"))
+	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))
 	assert.Equal(t, 10000, len(bucket.circle))
 	assert.Equal(t, 10000, len(bucket.rows))
 	assert.Equal(t, 1, len(bucket.Agents))
@@ -73,52 +77,52 @@ func TestBucketDelete(t *testing.T) {
 func TestBucketMatch(t *testing.T) {
 	handler := &testHandler{}
 	bucket := NewBucket("test", 10000, handler)
-	bucket.Insert("192.168.1.100:1883", []byte("100"))
+	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))
 	assert.Equal(t, 10000, len(bucket.circle))
 	assert.Equal(t, 10000, len(bucket.rows))
 	assert.Equal(t, 1, len(bucket.Agents))
 
-	key, payload, err := bucket.Match("xxxxx")
+	key, payload, err := bucket.Match("werbenhuxxxxx")
 	assert.Nil(t, err)
 	assert.NotNil(t, payload)
 	assert.NotEqual(t, key, "")
 	assert.Equal(t, "192.168.1.100:1883", key)
-	assert.Equal(t, []byte("100"), payload)
+	assert.Equal(t, []byte("werbenhu100"), payload)
 }
 
 func TestBucketAll(t *testing.T) {
 	handler := &testHandler{}
 	bucket := NewBucket("test", 10000, handler)
-	bucket.Insert("192.168.1.100:1883", []byte("100"))
+	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))
 	assert.Equal(t, 10000, len(bucket.circle))
 	assert.Equal(t, 10000, len(bucket.rows))
 	assert.Equal(t, 1, len(bucket.Agents))
 
-	bucket.Insert("192.168.1.101:1883", []byte("101"))
+	bucket.Insert("192.168.1.101:1883", []byte("werbenhu101"))
 	assert.Equal(t, 20000, len(bucket.circle))
 	assert.Equal(t, 20000, len(bucket.rows))
 	assert.Equal(t, 2, len(bucket.Agents))
 
-	key, payload, err := bucket.Match("xxxxx")
+	key, payload, err := bucket.Match("werbenhuxxxxx")
 	assert.Nil(t, err)
 	assert.NotNil(t, payload)
 	assert.NotEqual(t, key, "")
 
 	bucket.Delete(key)
 	if key == "192.168.1.100:1883" {
-		key2, payload2, err := bucket.Match("xxxxx")
+		key2, payload2, err := bucket.Match("werbenhuxxxxx")
 		assert.Nil(t, err)
 		assert.NotNil(t, payload2)
 		assert.NotEqual(t, key2, "")
 		assert.Equal(t, "192.168.1.101:1883", key2)
-		assert.Equal(t, []byte("101"), payload2)
+		assert.Equal(t, []byte("werbenhu101"), payload2)
 	} else {
-		key2, payload2, err := bucket.Match("xxxxx")
+		key2, payload2, err := bucket.Match("werbenhuxxxxx")
 		assert.Nil(t, err)
 		assert.NotNil(t, payload2)
 		assert.NotEqual(t, key2, "")
 		assert.Equal(t, "192.168.1.100:1883", key2)
-		assert.Equal(t, []byte("100"), payload2)
+		assert.Equal(t, []byte("werbenhu100"), payload2)
 	}
 }
 
@@ -135,8 +139,8 @@ func BenchmarkHash(b *testing.B) {
 func BenchmarkMatch(b *testing.B) {
 	handler := &testHandler{}
 	bucket := NewBucket("test", 10000, handler)
-	bucket.Insert("192.168.1.100:1883", []byte("100"))
-	bucket.Insert("192.168.1.101:1883", []byte("101"))
+	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))
+	bucket.Insert("192.168.1.101:1883", []byte("werbenhu101"))
 
 	b.ReportAllocs()
 	b.ResetTimer()

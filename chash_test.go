@@ -19,7 +19,7 @@ func TestNewHash(t *testing.T) {
 	assert.Equal(t, handler, hash.handler)
 }
 
-func TestGetBucket(t *testing.T) {
+func TestCHashGetBucket(t *testing.T) {
 	handler := &testHandler{}
 	hash := New()
 	hash.SetHandler(handler)
@@ -35,7 +35,7 @@ func TestGetBucket(t *testing.T) {
 	assert.Equal(t, ErrBucketNotFound, err)
 }
 
-func TestCreateBucket(t *testing.T) {
+func TestCHashCreateBucket(t *testing.T) {
 	handler := &testHandler{}
 	hash := New()
 	hash.SetHandler(handler)
@@ -64,7 +64,7 @@ func TestCreateBucket(t *testing.T) {
 	assert.Equal(t, bucket2, hash.buckets[bucket2.Name])
 }
 
-func TestRemoveBucket(t *testing.T) {
+func TestCHashRemoveBucket(t *testing.T) {
 	handler := &testHandler{}
 	hash := New()
 	hash.SetHandler(handler)
@@ -89,7 +89,7 @@ func TestRemoveBucket(t *testing.T) {
 	assert.Equal(t, ErrBucketNotFound, err)
 }
 
-func TestInsertAgent(t *testing.T) {
+func TestCHashInsert(t *testing.T) {
 	handler := &testHandler{}
 	hash := New()
 	hash.SetHandler(handler)
@@ -145,7 +145,7 @@ func TestInsertAgent(t *testing.T) {
 	assert.Equal(t, ErrBucketNotFound, err)
 }
 
-func TestDelete(t *testing.T) {
+func TestCHashDeleteAgent(t *testing.T) {
 	handler := &testHandler{}
 	hash := New()
 	hash.SetHandler(handler)
@@ -172,7 +172,7 @@ func TestDelete(t *testing.T) {
 	assert.Equal(t, 0, len(bucket.Agents))
 }
 
-func TestSerialize(t *testing.T) {
+func TestCHashSerialize(t *testing.T) {
 	handler := &testHandler{}
 	hash := New()
 	hash.SetHandler(handler)
@@ -193,7 +193,7 @@ func TestSerialize(t *testing.T) {
 	assert.Equal(t, expert, string(bs))
 }
 
-func TestRestore(t *testing.T) {
+func TestCHashRestore(t *testing.T) {
 	handler := &testHandler{}
 	hash := New()
 	hash.SetHandler(handler)

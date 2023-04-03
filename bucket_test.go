@@ -41,7 +41,7 @@ func TestNewBucket(t *testing.T) {
 	assert.Equal(t, handler, bucket.handler)
 }
 
-func TestSetHandler(t *testing.T) {
+func TestBucketSetHandler(t *testing.T) {
 	handler := &testHandler{}
 	bucket := NewBucket("test", 10000, nil)
 
@@ -148,7 +148,7 @@ func TestBucketAll(t *testing.T) {
 	}
 }
 
-func BenchmarkHash(b *testing.B) {
+func BenchmarkBucketHash(b *testing.B) {
 	b.ResetTimer()
 	handler := &testHandler{}
 	key := "192.168.1.100:1883"
@@ -158,7 +158,7 @@ func BenchmarkHash(b *testing.B) {
 	}
 }
 
-func BenchmarkMatch(b *testing.B) {
+func BenchmarkBucketMatch(b *testing.B) {
 	handler := &testHandler{}
 	bucket := NewBucket("test", 10000, handler)
 	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))

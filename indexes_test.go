@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSearch(t *testing.T) {
+func TestIndexesSearch(t *testing.T) {
 
 	items := []struct {
 		idx    Indexes
@@ -107,7 +107,7 @@ func TestSearch(t *testing.T) {
 	}
 }
 
-func TestMatch(t *testing.T) {
+func TestIndexesMatch(t *testing.T) {
 
 	items := []struct {
 		idx    Indexes
@@ -238,26 +238,26 @@ func TestMatch(t *testing.T) {
 	}
 }
 
-func TestSort(t *testing.T) {
+func TestIndexesSort(t *testing.T) {
 	expert := Indexes{0, 1, 4, 5, 6, 8, 9}
 	idx := Indexes{9, 1, 5, 4, 8, 0, 6}
 	idx.Sort()
 	assert.Equal(t, idx, expert)
 }
 
-func TestLen(t *testing.T) {
+func TestIndexesLen(t *testing.T) {
 	idx := Indexes{9, 1, 5, 4, 8, 0, 6}
 	assert.Equal(t, 7, idx.Len())
 }
 
-func TestLess(t *testing.T) {
+func TestIndexesLess(t *testing.T) {
 	idx := Indexes{9, 1, 5, 4, 8, 0, 6}
 	assert.Equal(t, false, idx.Less(0, 1))
 	assert.Equal(t, true, idx.Less(1, 2))
 	assert.Equal(t, false, idx.Less(0, 6))
 }
 
-func TestSwap(t *testing.T) {
+func TestIndexesSwap(t *testing.T) {
 	idx := Indexes{9, 1, 5, 4, 8, 0, 6}
 	idx.Swap(0, 1)
 	assert.Equal(t, uint32(1), idx[0])

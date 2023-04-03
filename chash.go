@@ -9,13 +9,6 @@ import (
 	"sync"
 )
 
-type Handler interface {
-	OnAgentInsert(name string, agent *Agent) error
-	OnAgentDelete(name string, agent *Agent) error
-	OnBucketCreate(bucket *Bucket) error
-	OnBucketRemove(bucket *Bucket) error
-}
-
 var (
 	mu        sync.Mutex
 	singleton *CHash

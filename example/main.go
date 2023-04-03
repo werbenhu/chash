@@ -26,7 +26,7 @@ func main() {
 	}
 	redisHash.Insert("192.168.1.100:6379", []byte("redis0-info"))
 	redisHash.Insert("192.168.1.101:6379", []byte("redis1-info"))
-	redisHash.Insert("192.168.1.102:6379", []byte("medis2-info"))
+	redisHash.Insert("192.168.1.102:6379", []byte("redis2-info"))
 
 	user1DbHost, user1Dbinfo, err := dbHash.Match("user-id-1")
 	if err != nil {

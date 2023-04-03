@@ -31,7 +31,7 @@ func (idx Indexes) Search(target uint32) (int, bool) {
 		return 0, false
 	}
 	f := func(x int) bool {
-		return idx[x] >= (target)
+		return idx[x] >= target
 	}
 	i := sort.Search(len(idx), f)
 	if i >= idx.Len() {
@@ -50,7 +50,7 @@ func (idx Indexes) Match(target uint32) (int, bool) {
 	}
 	length := len(idx)
 	f := func(x int) bool {
-		return idx[x] > (target)
+		return idx[x] > target
 	}
 	i := sort.Search(length, f)
 

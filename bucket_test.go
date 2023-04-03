@@ -65,22 +65,30 @@ func TestBucketInsert(t *testing.T) {
 	handler := &testHandler{}
 	bucket := NewBucket("test", 10000, handler)
 
-	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))
+	key, payload := "192.168.1.100:1883", []byte("werbenhu100")
+	bucket.Insert(key, payload)
 
 	assert.Equal(t, 10000, len(bucket.circle))
 	assert.Equal(t, 10000, len(bucket.rows))
 	assert.Equal(t, 1, len(bucket.Agents))
+
+	assert.Equal(t, key, bucket.Agents[key].Key)
+	assert.Equal(t, payload, bucket.Agents[key].Payload)
 }
 
 func TestBucketDelete(t *testing.T) {
 	handler := &testHandler{}
 	bucket := NewBucket("test", 10000, handler)
-	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))
+
+	key, payload := "192.168.1.100:1883", []byte("werbenhu100")
+	bucket.Insert(key, payload)
 	assert.Equal(t, 10000, len(bucket.circle))
 	assert.Equal(t, 10000, len(bucket.rows))
 	assert.Equal(t, 1, len(bucket.Agents))
+	assert.Equal(t, key, bucket.Agents[key].Key)
+	assert.Equal(t, payload, bucket.Agents[key].Payload)
 
-	bucket.Delete("192.168.1.100:1883")
+	bucket.Delete(key)
 	assert.Equal(t, 0, len(bucket.circle))
 	assert.Equal(t, 0, len(bucket.rows))
 	assert.Equal(t, 0, len(bucket.Agents))
@@ -89,7 +97,9 @@ func TestBucketDelete(t *testing.T) {
 func TestBucketMatch(t *testing.T) {
 	handler := &testHandler{}
 	bucket := NewBucket("test", 10000, handler)
-	bucket.Insert("192.168.1.100:1883", []byte("werbenhu100"))
+
+	setKey, setPayload := "192.168.1.100:1883", []byte("werbenhu100")
+	bucket.Insert(setKey, setPayload)
 	assert.Equal(t, 10000, len(bucket.circle))
 	assert.Equal(t, 10000, len(bucket.rows))
 	assert.Equal(t, 1, len(bucket.Agents))
@@ -98,8 +108,8 @@ func TestBucketMatch(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, payload)
 	assert.NotEqual(t, key, "")
-	assert.Equal(t, "192.168.1.100:1883", key)
-	assert.Equal(t, []byte("werbenhu100"), payload)
+	assert.Equal(t, setKey, key)
+	assert.Equal(t, setPayload, payload)
 }
 
 func TestBucketAll(t *testing.T) {

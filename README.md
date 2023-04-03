@@ -16,7 +16,6 @@ hash.Insert("192.168.1.100:3306", []byte("mysql0-info"))
 hash.Insert("192.168.1.101:3306", []byte("mysql1-info"))
 
 host, info, err := hash.Match("user-id")
-
 ```
 
 ### Examples

@@ -32,14 +32,18 @@ func TestBucketInsert(t *testing.T) {
 	bucket := NewBucket("test", 10000)
 
 	key, payload := "192.168.1.100:1883", []byte("werbenhu100")
-	bucket.Insert(key, payload)
+	err := bucket.Insert(key, payload)
 
+	assert.Nil(t, err)
 	assert.Equal(t, 10000, len(bucket.circle))
 	assert.Equal(t, 10000, len(bucket.rows))
 	assert.Equal(t, 1, len(bucket.Agents))
 
 	assert.Equal(t, key, bucket.Agents[key].Key)
 	assert.Equal(t, payload, bucket.Agents[key].Payload)
+
+	err = bucket.Insert(key, payload)
+	assert.Equal(t, ErrKeyExisted, err)
 }
 
 func TestBucketDelete(t *testing.T) {

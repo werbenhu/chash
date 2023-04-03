@@ -64,6 +64,10 @@ func (b *Bucket) Insert(key string, payload []byte) error {
 	agent := &Agent{Key: key, Payload: payload}
 	b.Lock()
 	defer b.Unlock()
+
+	if _, ok := b.Agents[agent.Key]; ok {
+		return ErrKeyExisted
+	}
 	b.Agents[agent.Key] = agent
 
 	for i := 0; i < b.NumberOfReplicas; i++ {

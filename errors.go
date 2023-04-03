@@ -21,4 +21,5 @@ var (
 	ErrBucketNotFound  = err{Code: 10000, Msg: "bucket not found"}
 	ErrBucketExisted   = err{Code: 10001, Msg: "bucket already existed"}
 	ErrNoResultMatched = err{Code: 10002, Msg: "no result matched"}
+	ErrKeyExisted      = err{Code: 10003, Msg: "key already existed"}
 )

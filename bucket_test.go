@@ -41,6 +41,18 @@ func TestNewBucket(t *testing.T) {
 	assert.Equal(t, handler, bucket.handler)
 }
 
+func TestSetHandler(t *testing.T) {
+	handler := &testHandler{}
+	bucket := NewBucket("test", 10000, nil)
+
+	assert.NotNil(t, bucket)
+	assert.Nil(t, bucket.handler)
+
+	bucket.SetHandler(handler)
+	assert.NotNil(t, bucket.handler)
+	assert.Equal(t, handler, bucket.handler)
+}
+
 func TestBucketInit(t *testing.T) {
 	bucket := &Bucket{}
 	bucket.Init()

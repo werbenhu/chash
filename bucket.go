@@ -37,6 +37,10 @@ func NewBucket(name string, replicas int, handler Handler) *Bucket {
 	}
 }
 
+func (b *Bucket) SetHandler(handler Handler) {
+	b.handler = handler
+}
+
 func (b *Bucket) Init() {
 	if b.Agents == nil {
 		b.Agents = make(map[string]*Agent)

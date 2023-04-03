@@ -1,53 +1,26 @@
 # chash
-Consistent Hashing written by go
+Consistent Hashing written by Go
 
-Usege:
+### Getting chash
+
+With Go module support, simply add the following import
+
+`import "github.com/werbenhu/chash"`
+
+
+### Simple Usage
+```
+hash, _ := chash.CreateBucket("db-consistent-hash", 10000)
+
+hash.Insert("192.168.1.100:3306", []byte("mysql0-info"))
+hash.Insert("192.168.1.101:3306", []byte("mysql1-info"))
+
+host, info, err := hash.Match("user-id")
 
 ```
-package main
 
-import (
-	"fmt"
+### Examples
+See the [example](example/main.go) .
 
-	"github.com/werbenhu/chash"
-)
-
-func main() {
-
-	dbHash, err := chash.CreateBucket("db-consistent-hash", 10000)
-	if err != nil {
-		panic(err)
-	}
-	dbHash.Insert("192.168.1.100:3306", []byte("mysql0-info"))
-	dbHash.Insert("192.168.1.101:3306", []byte("mysql1-info"))
-	dbHash.Insert("192.168.1.102:3306", []byte("mysql2-info"))
-
-	redisHash, err := chash.CreateBucket("redis-consistent-hash", 10000)
-	if err != nil {
-		panic(err)
-	}
-	redisHash.Insert("192.168.1.100:6379", []byte("redis0-info"))
-	redisHash.Insert("192.168.1.101:6379", []byte("redis1-info"))
-	redisHash.Insert("192.168.1.102:6379", []byte("medis2-info"))
-
-	user1DbHost, user1Dbinfo, err := dbHash.Match("user-id-1")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("user-id-1 matched db host:%+v, info:%s\n", user1DbHost, user1Dbinfo)
-
-	user1RedisHost, user1RedisInfo, err := redisHash.Match("user-id-1")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("user-id-1 matched redis host:%+v, info:%s\n", user1RedisHost, user1RedisInfo)
-
-	dbHash.Delete("192.168.1.101:3306")
-	user1DbHost, user1Dbinfo, err = dbHash.Match("user-id-1")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("user-id-1 matched db host:%+v, info:%s\n", user1DbHost, user1Dbinfo)
-}
-
-```
+### Contributions
+Contributions and feedback are both welcomed and encouraged! Open an [issue](https://github.com/werbenhu/chash/issues) to report a bug, ask a question, or make a feature request.

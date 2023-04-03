@@ -32,18 +32,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("user-id-1 matched db host:%+v, info:%s\n", user1DbHost, user1Dbinfo)
+	fmt.Printf("user-id-1 matched db host:%s, info:%s\n", user1DbHost, user1Dbinfo)
 
 	user1RedisHost, user1RedisInfo, err := redisHash.Match("user-id-1")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("user-id-1 matched redis host:%+v, info:%s\n", user1RedisHost, user1RedisInfo)
+	fmt.Printf("user-id-1 matched redis host:%s, info:%s\n", user1RedisHost, user1RedisInfo)
 
 	dbHash.Delete("192.168.1.101:3306")
 	user1DbHost, user1Dbinfo, err = dbHash.Match("user-id-1")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("user-id-1 matched db host:%+v, info:%s\n", user1DbHost, user1Dbinfo)
+	fmt.Printf("user-id-1 matched db host:%s, info:%s\n", user1DbHost, user1Dbinfo)
 }

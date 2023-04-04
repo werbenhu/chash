@@ -17,6 +17,7 @@ func TestNewHash(t *testing.T) {
 }
 
 func TestCHashGlobalCreateBucket(t *testing.T) {
+	singleton = nil
 	bucket, err := CreateBucket("werbenhu1", 2000)
 	assert.NotNil(t, singleton)
 	assert.Nil(t, err)
@@ -29,15 +30,16 @@ func TestCHashGlobalCreateBucket(t *testing.T) {
 }
 
 func TestCHashGlobalGetBucket(t *testing.T) {
-	bucket1, err := CreateBucket("werbenhu1", 2000)
+	singleton = nil
+	bucket1, err := CreateBucket("werbenhu2", 2000)
 	assert.Nil(t, err)
 	assert.NotNil(t, bucket1)
 
-	bucket1, err = GetBucket("werbenhu1")
+	bucket1, err = GetBucket("werbenhu2")
 	assert.Nil(t, err)
 	assert.NotNil(t, bucket1)
 
-	bucket2, err := GetBucket("werbenhu2")
+	bucket2, err := GetBucket("werbenhu3")
 	assert.Nil(t, bucket2)
 	assert.Equal(t, ErrBucketNotFound, err)
 }
@@ -242,6 +244,7 @@ func TestCHashRestore(t *testing.T) {
 }
 
 func TestCHashGlobalSerialize(t *testing.T) {
+	singleton = nil
 	CreateBucket("werbenhu1", 2000)
 	CreateBucket("werbenhu2", 1000)
 
@@ -259,6 +262,7 @@ func TestCHashGlobalSerialize(t *testing.T) {
 }
 
 func TestCHashGlobalRestore(t *testing.T) {
+	singleton = nil
 	data := []byte(`{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"agents":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"agents":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`)
 	err := Restore(data)
 	assert.Nil(t, err)

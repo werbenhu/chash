@@ -26,6 +26,15 @@ func CreateBucket(bucketName string, replicas int) (*Bucket, error) {
 	return singleton.GetBucket(bucketName)
 }
 
+func GetBucket(bucketName string) (*Bucket, error) {
+	mu.Lock()
+	defer mu.Unlock()
+	if singleton == nil {
+		singleton = New()
+	}
+	return singleton.GetBucket(bucketName)
+}
+
 func Serialize() ([]byte, error) {
 	mu.Lock()
 	defer mu.Unlock()

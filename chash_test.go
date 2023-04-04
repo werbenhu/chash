@@ -28,6 +28,20 @@ func TestCHashGlobalCreateBucket(t *testing.T) {
 	assert.Nil(t, bucket)
 }
 
+func TestCHashGlobalGetBucket(t *testing.T) {
+	bucket1, err := CreateBucket("werbenhu1", 2000)
+	assert.Nil(t, err)
+	assert.NotNil(t, bucket1)
+
+	bucket1, err = GetBucket("werbenhu1")
+	assert.Nil(t, err)
+	assert.NotNil(t, bucket1)
+
+	bucket2, err := GetBucket("werbenhu2")
+	assert.Nil(t, bucket2)
+	assert.Equal(t, ErrBucketNotFound, err)
+}
+
 func TestCHashGetBucket(t *testing.T) {
 	hash := New()
 	err := hash.CreateBucket("werbenhu1", 2000)

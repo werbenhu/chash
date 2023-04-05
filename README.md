@@ -23,7 +23,7 @@ host, info, err := webGroup.Match("user-id")
 
 dbGroup, _ := chash.GetGroup("db")
 dbGroup.Insert("192.168.1.103:3306", []byte("mysql3-info"))
-
+host, info, err := dbGroup.Match("user-id")
 ```
 
 #### Single Group

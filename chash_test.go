@@ -86,10 +86,10 @@ func TestCHashRemoveGroup(t *testing.T) {
 func TestCHashInsert(t *testing.T) {
 	hash := New()
 	hash.CreateGroup("werbenhu1", 10000)
-	err := hash.InsertAgent("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
+	err := hash.Insert("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
 	assert.Nil(t, err)
 
-	err = hash.InsertAgent("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
+	err = hash.Insert("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
 	assert.Nil(t, err)
 
 	group1, err := hash.GetGroup("werbenhu1")
@@ -107,11 +107,11 @@ func TestCHashInsert(t *testing.T) {
 	})
 
 	hash.CreateGroup("werbenhu2", 10000)
-	err = hash.InsertAgent("werbenhu2", "192.168.2.101:8080", []byte("werbenhu201"))
+	err = hash.Insert("werbenhu2", "192.168.2.101:8080", []byte("werbenhu201"))
 	assert.Nil(t, err)
-	err = hash.InsertAgent("werbenhu2", "192.168.2.102:8080", []byte("werbenhu202"))
+	err = hash.Insert("werbenhu2", "192.168.2.102:8080", []byte("werbenhu202"))
 	assert.Nil(t, err)
-	err = hash.InsertAgent("werbenhu2", "192.168.2.103:8080", []byte("werbenhu203"))
+	err = hash.Insert("werbenhu2", "192.168.2.103:8080", []byte("werbenhu203"))
 	assert.Nil(t, err)
 
 	group2, err := hash.GetGroup("werbenhu2")
@@ -132,30 +132,30 @@ func TestCHashInsert(t *testing.T) {
 		},
 	})
 
-	err = hash.InsertAgent("b3", "192.168.1.101:8080", []byte("werbenhu101"))
+	err = hash.Insert("b3", "192.168.1.101:8080", []byte("werbenhu101"))
 	assert.Equal(t, ErrGroupNotFound, err)
 }
 
 func TestCHashDeleteAgent(t *testing.T) {
 	hash := New()
 	hash.CreateGroup("werbenhu1", 10000)
-	hash.InsertAgent("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
-	hash.InsertAgent("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
+	hash.Insert("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
+	hash.Insert("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
 
 	group, err := hash.GetGroup("werbenhu1")
 	assert.Nil(t, err)
 	assert.NotNil(t, group)
 
 	assert.Equal(t, 2, len(group.Agents))
-	err = hash.DeleteAgent("werbenhu1", "192.168.1.101:8080")
+	err = hash.Delete("werbenhu1", "192.168.1.101:8080")
 	assert.Equal(t, 1, len(group.Agents))
 	assert.Nil(t, err)
 
-	err = hash.DeleteAgent("werbenhu1", "192.168.1.102:8080")
+	err = hash.Delete("werbenhu1", "192.168.1.102:8080")
 	assert.Nil(t, err)
 	assert.Equal(t, 0, len(group.Agents))
 
-	err = hash.DeleteAgent("werbenhu1", "192.168.1.101:8080")
+	err = hash.Delete("werbenhu1", "192.168.1.101:8080")
 	assert.Nil(t, err)
 	assert.Equal(t, 0, len(group.Agents))
 }
@@ -165,11 +165,11 @@ func TestCHashSerialize(t *testing.T) {
 	hash.CreateGroup("werbenhu1", 2000)
 	hash.CreateGroup("werbenhu2", 1000)
 
-	hash.InsertAgent("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
-	hash.InsertAgent("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
+	hash.Insert("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
+	hash.Insert("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
 
-	hash.InsertAgent("werbenhu2", "192.168.2.101:8080", []byte("werbenhu201"))
-	hash.InsertAgent("werbenhu2", "192.168.2.102:8080", []byte("werbenhu202"))
+	hash.Insert("werbenhu2", "192.168.2.101:8080", []byte("werbenhu201"))
+	hash.Insert("werbenhu2", "192.168.2.102:8080", []byte("werbenhu202"))
 
 	bs, err := hash.Serialize()
 	expert := `{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"agents":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"agents":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`

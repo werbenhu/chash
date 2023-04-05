@@ -48,7 +48,7 @@ func (c *CHash) RemoveGroup(groupName string) {
 	delete(c.groups, groupName)
 }
 
-func (c *CHash) InsertAgent(groupName string, key string, payload []byte) error {
+func (c *CHash) Insert(groupName string, key string, payload []byte) error {
 	c.Lock()
 	group, ok := c.groups[groupName]
 	c.Unlock()
@@ -58,7 +58,7 @@ func (c *CHash) InsertAgent(groupName string, key string, payload []byte) error 
 	return group.Insert(key, payload)
 }
 
-func (c *CHash) DeleteAgent(groupName string, key string) error {
+func (c *CHash) Delete(groupName string, key string) error {
 	c.Lock()
 	group, ok := c.groups[groupName]
 	c.Unlock()

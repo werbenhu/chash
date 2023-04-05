@@ -63,11 +63,11 @@ func TestCHashSingletonSerialize(t *testing.T) {
 	CreateGroup("werbenhu1", 2000)
 	CreateGroup("werbenhu2", 1000)
 
-	singleton.InsertAgent("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
-	singleton.InsertAgent("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
+	singleton.Insert("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
+	singleton.Insert("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
 
-	singleton.InsertAgent("werbenhu2", "192.168.2.101:8080", []byte("werbenhu201"))
-	singleton.InsertAgent("werbenhu2", "192.168.2.102:8080", []byte("werbenhu202"))
+	singleton.Insert("werbenhu2", "192.168.2.101:8080", []byte("werbenhu201"))
+	singleton.Insert("werbenhu2", "192.168.2.102:8080", []byte("werbenhu202"))
 
 	bs, err := Serialize()
 	expert := `{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"agents":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"agents":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`

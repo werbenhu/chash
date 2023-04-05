@@ -10,10 +10,13 @@ With Go module support, simply add the following import
 
 ### Simple Usage
 ```
-// chash 
+// create a group 
 dbGroup, _ := chash.CreateGroup("db", 10000)
+// Insert() insert elements
 dbGroup.Insert("192.168.1.100:3306", []byte("mysql0-info"))
 dbGroup.Insert("192.168.1.101:3306", []byte("mysql1-info"))
+
+// Match(key) returns an element close to where key hashes to in the circle.
 host, info, err := dbGroup.Match("user-id")
 
 webGroup, _ := chash.CreateGroup("web", 10000)

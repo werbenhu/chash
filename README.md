@@ -10,12 +10,12 @@ With Go module support, simply add the following import
 
 ### Simple Usage
 ```
-bucket, _ := chash.CreateBucket("db-consistent-hash", 10000)
+group, _ := chash.CreateGroup("db-consistent-hash", 10000)
 
-bucket.Insert("192.168.1.100:3306", []byte("mysql0-info"))
-bucket.Insert("192.168.1.101:3306", []byte("mysql1-info"))
+group.Insert("192.168.1.100:3306", []byte("mysql0-info"))
+group.Insert("192.168.1.101:3306", []byte("mysql1-info"))
 
-host, info, err := bucket.Match("user-id")
+host, info, err := group.Match("user-id")
 ```
 
 ### Examples

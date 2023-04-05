@@ -18,8 +18,8 @@ func (e err) Error() string {
 }
 
 var (
-	ErrBucketNotFound  = err{Code: 10000, Msg: "bucket not found"}
-	ErrBucketExisted   = err{Code: 10001, Msg: "bucket already existed"}
+	ErrGroupNotFound   = err{Code: 10000, Msg: "group not found"}
+	ErrGroupExisted    = err{Code: 10001, Msg: "group already existed"}
 	ErrNoResultMatched = err{Code: 10002, Msg: "no result matched"}
 	ErrKeyExisted      = err{Code: 10003, Msg: "key already existed"}
 )

@@ -11,89 +11,89 @@ import (
 
 type CHash struct {
 	sync.RWMutex
-	buckets map[string]*Bucket
+	groups map[string]*Group
 }
 
 func New() *CHash {
 	return &CHash{
-		buckets: make(map[string]*Bucket),
+		groups: make(map[string]*Group),
 	}
 }
 
-func (c *CHash) GetBucket(bucketName string) (*Bucket, error) {
+func (c *CHash) GetGroup(groupName string) (*Group, error) {
 	c.RLock()
 	defer c.RUnlock()
-	bucket, ok := c.buckets[bucketName]
+	group, ok := c.groups[groupName]
 	if !ok {
-		return nil, ErrBucketNotFound
+		return nil, ErrGroupNotFound
 	}
-	return bucket, nil
+	return group, nil
 }
 
-func (c *CHash) CreateBucket(bucketName string, replicas int) (*Bucket, error) {
+func (c *CHash) CreateGroup(groupName string, replicas int) (*Group, error) {
 	c.Lock()
 	defer c.Unlock()
-	if existing, ok := c.buckets[bucketName]; ok {
-		return existing, ErrBucketExisted
+	if existing, ok := c.groups[groupName]; ok {
+		return existing, ErrGroupExisted
 	}
 
-	bucket := NewBucket(bucketName, replicas)
-	c.buckets[bucketName] = bucket
-	return bucket, nil
+	group := NewGroup(groupName, replicas)
+	c.groups[groupName] = group
+	return group, nil
 }
 
-func (c *CHash) RemoveBucket(bucketName string) {
+func (c *CHash) RemoveGroup(groupName string) {
 	c.Lock()
 	defer c.Unlock()
-	delete(c.buckets, bucketName)
+	delete(c.groups, groupName)
 }
 
-func (c *CHash) InsertAgent(bucketName string, key string, payload []byte) error {
+func (c *CHash) InsertAgent(groupName string, key string, payload []byte) error {
 	c.Lock()
-	bucket, ok := c.buckets[bucketName]
+	group, ok := c.groups[groupName]
 	c.Unlock()
 	if !ok {
-		return ErrBucketNotFound
+		return ErrGroupNotFound
 	}
-	return bucket.Insert(key, payload)
+	return group.Insert(key, payload)
 }
 
-func (c *CHash) DeleteAgent(bucketName string, key string) error {
+func (c *CHash) DeleteAgent(groupName string, key string) error {
 	c.Lock()
-	bucket, ok := c.buckets[bucketName]
+	group, ok := c.groups[groupName]
 	c.Unlock()
 	if !ok {
-		return ErrBucketNotFound
+		return ErrGroupNotFound
 	}
-	return bucket.Delete(key)
+	return group.Delete(key)
 }
 
-func (c *CHash) Match(bucketName string, key string) (string, []byte, error) {
+func (c *CHash) Match(groupName string, key string) (string, []byte, error) {
 	c.RLock()
-	bucket, ok := c.buckets[bucketName]
+	group, ok := c.groups[groupName]
 	c.RUnlock()
 	if !ok {
-		return "", nil, ErrBucketNotFound
+		return "", nil, ErrGroupNotFound
 	}
-	return bucket.Match(key)
+	return group.Match(key)
 }
 
 func (c *CHash) Serialize() ([]byte, error) {
 	c.RLock()
 	defer c.RUnlock()
-	return json.Marshal(c.buckets)
+	return json.Marshal(c.groups)
 }
 
 func (c *CHash) Restore(data []byte) error {
 	c.Lock()
 	defer c.Unlock()
-	if err := json.Unmarshal(data, &c.buckets); err != nil {
+	if err := json.Unmarshal(data, &c.groups); err != nil {
 		return err
 	}
-	for _, bucket := range c.buckets {
-		bucket.Init()
-		for _, node := range bucket.Agents {
-			bucket.hashAgent(node)
+	for _, group := range c.groups {
+		group.Init()
+		for _, node := range group.Agents {
+			group.hashAgent(node)
 		}
 	}
 	return nil

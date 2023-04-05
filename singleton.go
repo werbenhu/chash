@@ -9,31 +9,31 @@ var (
 	singleton *CHash
 )
 
-func CreateBucket(bucketName string, replicas int) (*Bucket, error) {
+func CreateGroup(groupName string, replicas int) (*Group, error) {
 	mu.Lock()
 	defer mu.Unlock()
 	if singleton == nil {
 		singleton = New()
 	}
-	return singleton.CreateBucket(bucketName, replicas)
+	return singleton.CreateGroup(groupName, replicas)
 }
 
-func RemoveBucket(bucketName string) {
+func RemoveGroup(groupName string) {
 	mu.Lock()
 	defer mu.Unlock()
 	if singleton == nil {
 		return
 	}
-	singleton.RemoveBucket(bucketName)
+	singleton.RemoveGroup(groupName)
 }
 
-func GetBucket(bucketName string) (*Bucket, error) {
+func GetGroup(groupName string) (*Group, error) {
 	mu.Lock()
 	defer mu.Unlock()
 	if singleton == nil {
 		singleton = New()
 	}
-	return singleton.GetBucket(bucketName)
+	return singleton.GetGroup(groupName)
 }
 
 func Serialize() ([]byte, error) {

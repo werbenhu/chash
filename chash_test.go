@@ -13,89 +13,89 @@ import (
 func TestNewHash(t *testing.T) {
 	hash := New()
 	assert.NotNil(t, hash)
-	assert.NotNil(t, hash.buckets)
+	assert.NotNil(t, hash.groups)
 }
 
-func TestCHashGetBucket(t *testing.T) {
+func TestCHashGetGroup(t *testing.T) {
 	hash := New()
-	bucket1, err := hash.CreateBucket("werbenhu1", 2000)
+	group1, err := hash.CreateGroup("werbenhu1", 2000)
 	assert.Nil(t, err)
-	assert.NotNil(t, bucket1)
+	assert.NotNil(t, group1)
 
-	existing, err := hash.GetBucket("werbenhu1")
+	existing, err := hash.GetGroup("werbenhu1")
 	assert.Nil(t, err)
 	assert.NotNil(t, existing)
-	assert.Equal(t, existing, bucket1)
+	assert.Equal(t, existing, group1)
 
-	bucket2, err := hash.GetBucket("werbenhu2")
-	assert.Nil(t, bucket2)
-	assert.Equal(t, ErrBucketNotFound, err)
+	group2, err := hash.GetGroup("werbenhu2")
+	assert.Nil(t, group2)
+	assert.Equal(t, ErrGroupNotFound, err)
 }
 
-func TestCHashCreateBucket(t *testing.T) {
+func TestCHashCreateGroup(t *testing.T) {
 	hash := New()
-	bucket1, err := hash.CreateBucket("werbenhu1", 2000)
+	group1, err := hash.CreateGroup("werbenhu1", 2000)
 	assert.Nil(t, err)
-	existing, err := hash.GetBucket("werbenhu1")
+	existing, err := hash.GetGroup("werbenhu1")
 	assert.Nil(t, err)
-	assert.NotNil(t, bucket1)
-	assert.Equal(t, "werbenhu1", bucket1.Name)
-	assert.Equal(t, bucket1, existing)
+	assert.NotNil(t, group1)
+	assert.Equal(t, "werbenhu1", group1.Name)
+	assert.Equal(t, group1, existing)
 
-	existing, err = hash.CreateBucket("werbenhu1", 3000)
-	assert.Equal(t, ErrBucketExisted, err)
-	assert.Equal(t, bucket1, existing)
+	existing, err = hash.CreateGroup("werbenhu1", 3000)
+	assert.Equal(t, ErrGroupExisted, err)
+	assert.Equal(t, group1, existing)
 
-	existing, err = hash.GetBucket("werbenhu1")
+	existing, err = hash.GetGroup("werbenhu1")
 	assert.Nil(t, err)
 	assert.NotNil(t, existing)
-	assert.Equal(t, bucket1, existing)
+	assert.Equal(t, group1, existing)
 
-	bucket2, err := hash.CreateBucket("werbenhu2", 1000)
+	group2, err := hash.CreateGroup("werbenhu2", 1000)
 	assert.Nil(t, err)
-	assert.NotNil(t, bucket2)
+	assert.NotNil(t, group2)
 
-	existing, err = hash.GetBucket("werbenhu2")
+	existing, err = hash.GetGroup("werbenhu2")
 	assert.NotNil(t, existing)
 	assert.Nil(t, err)
-	assert.Equal(t, 2, len(hash.buckets))
+	assert.Equal(t, 2, len(hash.groups))
 	assert.Equal(t, "werbenhu2", existing.Name)
 
-	assert.Equal(t, bucket1, hash.buckets[bucket1.Name])
-	assert.Equal(t, bucket2, hash.buckets[bucket2.Name])
+	assert.Equal(t, group1, hash.groups[group1.Name])
+	assert.Equal(t, group2, hash.groups[group2.Name])
 }
 
-func TestCHashRemoveBucket(t *testing.T) {
+func TestCHashRemoveGroup(t *testing.T) {
 	hash := New()
-	bucket1, err := hash.CreateBucket("werbenhu1", 2000)
+	group1, err := hash.CreateGroup("werbenhu1", 2000)
 	assert.Nil(t, err)
-	assert.NotNil(t, bucket1)
+	assert.NotNil(t, group1)
 
-	bucket2, err := hash.CreateBucket("werbenhu2", 1000)
+	group2, err := hash.CreateGroup("werbenhu2", 1000)
 	assert.Nil(t, err)
-	assert.NotNil(t, bucket2)
+	assert.NotNil(t, group2)
 
-	assert.Equal(t, 2, len(hash.buckets))
-	hash.RemoveBucket("werbenhu1")
-	assert.Equal(t, 1, len(hash.buckets))
+	assert.Equal(t, 2, len(hash.groups))
+	hash.RemoveGroup("werbenhu1")
+	assert.Equal(t, 1, len(hash.groups))
 
-	_, err = hash.GetBucket("werbenhu1")
-	assert.Equal(t, ErrBucketNotFound, err)
+	_, err = hash.GetGroup("werbenhu1")
+	assert.Equal(t, ErrGroupNotFound, err)
 }
 
 func TestCHashInsert(t *testing.T) {
 	hash := New()
-	hash.CreateBucket("werbenhu1", 10000)
+	hash.CreateGroup("werbenhu1", 10000)
 	err := hash.InsertAgent("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
 	assert.Nil(t, err)
 
 	err = hash.InsertAgent("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
 	assert.Nil(t, err)
 
-	bucket1, err := hash.GetBucket("werbenhu1")
+	group1, err := hash.GetGroup("werbenhu1")
 	assert.Nil(t, err)
-	assert.NotNil(t, bucket1)
-	assert.Equal(t, bucket1.Agents, map[string]*Agent{
+	assert.NotNil(t, group1)
+	assert.Equal(t, group1.Agents, map[string]*Agent{
 		"192.168.1.101:8080": {
 			Key:     "192.168.1.101:8080",
 			Payload: []byte("werbenhu101"),
@@ -106,7 +106,7 @@ func TestCHashInsert(t *testing.T) {
 		},
 	})
 
-	hash.CreateBucket("werbenhu2", 10000)
+	hash.CreateGroup("werbenhu2", 10000)
 	err = hash.InsertAgent("werbenhu2", "192.168.2.101:8080", []byte("werbenhu201"))
 	assert.Nil(t, err)
 	err = hash.InsertAgent("werbenhu2", "192.168.2.102:8080", []byte("werbenhu202"))
@@ -114,10 +114,10 @@ func TestCHashInsert(t *testing.T) {
 	err = hash.InsertAgent("werbenhu2", "192.168.2.103:8080", []byte("werbenhu203"))
 	assert.Nil(t, err)
 
-	bucket2, err := hash.GetBucket("werbenhu2")
+	group2, err := hash.GetGroup("werbenhu2")
 	assert.Nil(t, err)
-	assert.NotNil(t, bucket2)
-	assert.Equal(t, bucket2.Agents, map[string]*Agent{
+	assert.NotNil(t, group2)
+	assert.Equal(t, group2.Agents, map[string]*Agent{
 		"192.168.2.101:8080": {
 			Key:     "192.168.2.101:8080",
 			Payload: []byte("werbenhu201"),
@@ -133,37 +133,37 @@ func TestCHashInsert(t *testing.T) {
 	})
 
 	err = hash.InsertAgent("b3", "192.168.1.101:8080", []byte("werbenhu101"))
-	assert.Equal(t, ErrBucketNotFound, err)
+	assert.Equal(t, ErrGroupNotFound, err)
 }
 
 func TestCHashDeleteAgent(t *testing.T) {
 	hash := New()
-	hash.CreateBucket("werbenhu1", 10000)
+	hash.CreateGroup("werbenhu1", 10000)
 	hash.InsertAgent("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
 	hash.InsertAgent("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
 
-	bucket, err := hash.GetBucket("werbenhu1")
+	group, err := hash.GetGroup("werbenhu1")
 	assert.Nil(t, err)
-	assert.NotNil(t, bucket)
+	assert.NotNil(t, group)
 
-	assert.Equal(t, 2, len(bucket.Agents))
+	assert.Equal(t, 2, len(group.Agents))
 	err = hash.DeleteAgent("werbenhu1", "192.168.1.101:8080")
-	assert.Equal(t, 1, len(bucket.Agents))
+	assert.Equal(t, 1, len(group.Agents))
 	assert.Nil(t, err)
 
 	err = hash.DeleteAgent("werbenhu1", "192.168.1.102:8080")
 	assert.Nil(t, err)
-	assert.Equal(t, 0, len(bucket.Agents))
+	assert.Equal(t, 0, len(group.Agents))
 
 	err = hash.DeleteAgent("werbenhu1", "192.168.1.101:8080")
 	assert.Nil(t, err)
-	assert.Equal(t, 0, len(bucket.Agents))
+	assert.Equal(t, 0, len(group.Agents))
 }
 
 func TestCHashSerialize(t *testing.T) {
 	hash := New()
-	hash.CreateBucket("werbenhu1", 2000)
-	hash.CreateBucket("werbenhu2", 1000)
+	hash.CreateGroup("werbenhu1", 2000)
+	hash.CreateGroup("werbenhu2", 1000)
 
 	hash.InsertAgent("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
 	hash.InsertAgent("werbenhu1", "192.168.1.102:8080", []byte("werbenhu102"))
@@ -184,11 +184,11 @@ func TestCHashRestore(t *testing.T) {
 	err := hash.Restore(data)
 	assert.Nil(t, err)
 
-	bucket1, err := hash.GetBucket("werbenhu1")
+	group1, err := hash.GetGroup("werbenhu1")
 	assert.Nil(t, err)
-	assert.NotNil(t, bucket1)
-	assert.Equal(t, 4000, len(bucket1.rows))
-	assert.Equal(t, bucket1.Agents, map[string]*Agent{
+	assert.NotNil(t, group1)
+	assert.Equal(t, 4000, len(group1.rows))
+	assert.Equal(t, group1.Agents, map[string]*Agent{
 		"192.168.1.101:8080": {
 			Key:     "192.168.1.101:8080",
 			Payload: []byte("werbenhu101"),
@@ -199,11 +199,11 @@ func TestCHashRestore(t *testing.T) {
 		},
 	})
 
-	bucket2, err := hash.GetBucket("werbenhu2")
+	group2, err := hash.GetGroup("werbenhu2")
 	assert.Nil(t, err)
-	assert.NotNil(t, bucket2)
-	assert.Equal(t, 2000, len(bucket2.rows))
-	assert.Equal(t, bucket2.Agents, map[string]*Agent{
+	assert.NotNil(t, group2)
+	assert.Equal(t, 2000, len(group2.rows))
+	assert.Equal(t, group2.Agents, map[string]*Agent{
 		"192.168.2.101:8080": {
 			Key:     "192.168.2.101:8080",
 			Payload: []byte("werbenhu201"),

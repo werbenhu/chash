@@ -15,7 +15,7 @@ type Agent struct {
 	Payload []byte `json:"payload"`
 }
 
-type Bucket struct {
+type Group struct {
 	sync.RWMutex
 	Name             string            `json:"name"`
 	NumberOfReplicas int               `json:"numberOfReplicas"`
@@ -25,8 +25,8 @@ type Bucket struct {
 	rows   map[uint32]*Agent
 }
 
-func NewBucket(name string, replicas int) *Bucket {
-	return &Bucket{
+func NewGroup(name string, replicas int) *Group {
+	return &Group{
 		Name:             name,
 		NumberOfReplicas: replicas,
 		Agents:           make(map[string]*Agent),
@@ -35,7 +35,7 @@ func NewBucket(name string, replicas int) *Bucket {
 	}
 }
 
-func (b *Bucket) Init() {
+func (b *Group) Init() {
 	if b.Agents == nil {
 		b.Agents = make(map[string]*Agent)
 	}
@@ -47,7 +47,7 @@ func (b *Bucket) Init() {
 	}
 }
 
-func (b *Bucket) hash(key string) uint32 {
+func (b *Group) hash(key string) uint32 {
 	if len(key) < 64 {
 		var scratch [64]byte
 		copy(scratch[:], key)
@@ -56,11 +56,11 @@ func (b *Bucket) hash(key string) uint32 {
 	return crc32.ChecksumIEEE([]byte(key))
 }
 
-func (b *Bucket) virtualKey(key string, idx int) string {
+func (b *Group) virtualKey(key string, idx int) string {
 	return strconv.Itoa(idx) + key
 }
 
-func (b *Bucket) hashAgent(agent *Agent) {
+func (b *Group) hashAgent(agent *Agent) {
 	for i := 0; i < b.NumberOfReplicas; i++ {
 		virtualKey := b.virtualKey(agent.Key, i)
 		crc := b.hash(virtualKey)
@@ -70,7 +70,7 @@ func (b *Bucket) hashAgent(agent *Agent) {
 	b.circle.Sort()
 }
 
-func (b *Bucket) Insert(key string, payload []byte) error {
+func (b *Group) Insert(key string, payload []byte) error {
 	agent := &Agent{Key: key, Payload: payload}
 	b.Lock()
 	defer b.Unlock()
@@ -84,7 +84,7 @@ func (b *Bucket) Insert(key string, payload []byte) error {
 	return nil
 }
 
-func (b *Bucket) Delete(key string) error {
+func (b *Group) Delete(key string) error {
 	agent := &Agent{Key: key, Payload: nil}
 	b.Lock()
 	defer b.Unlock()
@@ -102,7 +102,7 @@ func (b *Bucket) Delete(key string) error {
 	return nil
 }
 
-func (b *Bucket) Match(key string) (string, []byte, error) {
+func (b *Group) Match(key string) (string, []byte, error) {
 	crc := b.hash(key)
 	b.RLock()
 	defer b.RUnlock()

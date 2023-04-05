@@ -28,14 +28,14 @@ func main() {
 	redisHash.Insert("192.168.1.101:6379", []byte("redis1-info"))
 	redisHash.Insert("192.168.1.102:6379", []byte("redis2-info"))
 
-	// get the mysql server close to where key hashes to in the circle
+	// get the mysql server close to where the user to in the circle by userid
 	user1DbHost, user1Dbinfo, err := dbHash.Match("user-id-1")
 	if err != nil {
 		panic(err)
 	}
 	fmt.Printf("user-id-1 matched db host:%s, info:%s\n", user1DbHost, user1Dbinfo)
 
-	// get the redis server close to where key hashes to in the circle
+	// get the mysql server close to where the user to in the circle by userid
 	user1RedisHost, user1RedisInfo, err := redisHash.Match("user-id-1")
 	if err != nil {
 		panic(err)

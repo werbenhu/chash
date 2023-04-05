@@ -38,7 +38,7 @@ dbGroup.Insert("192.168.1.103:3306", []byte("mysql3-info"))
 host, info, err := dbGroup.Match("user-id")
 ```
 
-#### Match the key from a group
+#### Match the element for a key
 ```
 // match an element close to where key hashes to in the circle.
 host, info, err := dbGroup.Match("user-id")

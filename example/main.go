@@ -12,18 +12,12 @@ import (
 
 func main() {
 
-	dbHash, err := chash.CreateBucket("db-consistent-hash", 10000)
-	if err != nil {
-		panic(err)
-	}
+	dbHash, _ := chash.CreateBucket("db-consistent-hash", 10000)
 	dbHash.Insert("192.168.1.100:3306", []byte("mysql0-info"))
 	dbHash.Insert("192.168.1.101:3306", []byte("mysql1-info"))
 	dbHash.Insert("192.168.1.102:3306", []byte("mysql2-info"))
 
-	redisHash, err := chash.CreateBucket("redis-consistent-hash", 10000)
-	if err != nil {
-		panic(err)
-	}
+	redisHash, _ := chash.CreateBucket("redis-consistent-hash", 10000)
 	redisHash.Insert("192.168.1.100:6379", []byte("redis0-info"))
 	redisHash.Insert("192.168.1.101:6379", []byte("redis1-info"))
 	redisHash.Insert("192.168.1.102:6379", []byte("redis2-info"))

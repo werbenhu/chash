@@ -30,16 +30,16 @@ func (c *CHash) GetBucket(bucketName string) (*Bucket, error) {
 	return bucket, nil
 }
 
-func (c *CHash) CreateBucket(bucketName string, replicas int) error {
+func (c *CHash) CreateBucket(bucketName string, replicas int) (*Bucket, error) {
 	c.Lock()
 	defer c.Unlock()
-	if _, ok := c.buckets[bucketName]; ok {
-		return ErrBucketExisted
+	if existing, ok := c.buckets[bucketName]; ok {
+		return existing, ErrBucketExisted
 	}
 
 	bucket := NewBucket(bucketName, replicas)
 	c.buckets[bucketName] = bucket
-	return nil
+	return bucket, nil
 }
 
 func (c *CHash) RemoveBucket(bucketName string) {

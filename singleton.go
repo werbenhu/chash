@@ -15,10 +15,16 @@ func CreateBucket(bucketName string, replicas int) (*Bucket, error) {
 	if singleton == nil {
 		singleton = New()
 	}
-	if err := singleton.CreateBucket(bucketName, replicas); err != nil {
-		return nil, err
+	return singleton.CreateBucket(bucketName, replicas)
+}
+
+func RemoveBucket(bucketName string) {
+	mu.Lock()
+	defer mu.Unlock()
+	if singleton == nil {
+		return
 	}
-	return singleton.GetBucket(bucketName)
+	singleton.RemoveBucket(bucketName)
 }
 
 func GetBucket(bucketName string) (*Bucket, error) {

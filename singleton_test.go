@@ -18,9 +18,29 @@ func TestCHashSingletonCreateBucket(t *testing.T) {
 	assert.NotNil(t, bucket)
 	assert.Equal(t, "werbenhu1", bucket.Name)
 
-	bucket, err = CreateBucket("werbenhu1", 3000)
+	existing, err := CreateBucket("werbenhu1", 3000)
 	assert.Equal(t, ErrBucketExisted, err)
-	assert.Nil(t, bucket)
+	assert.NotNil(t, existing)
+	assert.Equal(t, bucket, existing)
+}
+
+func TestCHashSingletonRemoveBucket(t *testing.T) {
+	singleton = nil
+
+	bucket1, err := CreateBucket("werbenhu1", 2000)
+	assert.Nil(t, err)
+	assert.NotNil(t, bucket1)
+
+	bucket2, err := CreateBucket("werbenhu2", 1000)
+	assert.Nil(t, err)
+	assert.NotNil(t, bucket2)
+
+	assert.Equal(t, 2, len(singleton.buckets))
+	RemoveBucket("werbenhu1")
+	assert.Equal(t, 1, len(singleton.buckets))
+
+	_, err = GetBucket("werbenhu1")
+	assert.Equal(t, ErrBucketNotFound, err)
 }
 
 func TestCHashSingletonGetBucket(t *testing.T) {

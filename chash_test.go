@@ -18,11 +18,14 @@ func TestNewHash(t *testing.T) {
 
 func TestCHashGetBucket(t *testing.T) {
 	hash := New()
-	err := hash.CreateBucket("werbenhu1", 2000)
-	assert.Nil(t, err)
-	bucket1, err := hash.GetBucket("werbenhu1")
+	bucket1, err := hash.CreateBucket("werbenhu1", 2000)
 	assert.Nil(t, err)
 	assert.NotNil(t, bucket1)
+
+	existing, err := hash.GetBucket("werbenhu1")
+	assert.Nil(t, err)
+	assert.NotNil(t, existing)
+	assert.Equal(t, existing, bucket1)
 
 	bucket2, err := hash.GetBucket("werbenhu2")
 	assert.Nil(t, bucket2)
@@ -31,27 +34,32 @@ func TestCHashGetBucket(t *testing.T) {
 
 func TestCHashCreateBucket(t *testing.T) {
 	hash := New()
-	err := hash.CreateBucket("werbenhu1", 2000)
+	bucket1, err := hash.CreateBucket("werbenhu1", 2000)
 	assert.Nil(t, err)
-	bucket1, err := hash.GetBucket("werbenhu1")
+	existing, err := hash.GetBucket("werbenhu1")
 	assert.Nil(t, err)
 	assert.NotNil(t, bucket1)
 	assert.Equal(t, "werbenhu1", bucket1.Name)
+	assert.Equal(t, bucket1, existing)
 
-	err = hash.CreateBucket("werbenhu1", 3000)
+	existing, err = hash.CreateBucket("werbenhu1", 3000)
 	assert.Equal(t, ErrBucketExisted, err)
-	bucket3, err := hash.GetBucket("werbenhu1")
-	assert.Nil(t, err)
-	assert.NotNil(t, bucket3)
-	assert.Equal(t, bucket1, bucket3)
+	assert.Equal(t, bucket1, existing)
 
-	err = hash.CreateBucket("werbenhu2", 1000)
+	existing, err = hash.GetBucket("werbenhu1")
 	assert.Nil(t, err)
-	bucket2, err := hash.GetBucket("werbenhu2")
+	assert.NotNil(t, existing)
+	assert.Equal(t, bucket1, existing)
+
+	bucket2, err := hash.CreateBucket("werbenhu2", 1000)
+	assert.Nil(t, err)
 	assert.NotNil(t, bucket2)
+
+	existing, err = hash.GetBucket("werbenhu2")
+	assert.NotNil(t, existing)
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(hash.buckets))
-	assert.Equal(t, "werbenhu2", bucket2.Name)
+	assert.Equal(t, "werbenhu2", existing.Name)
 
 	assert.Equal(t, bucket1, hash.buckets[bucket1.Name])
 	assert.Equal(t, bucket2, hash.buckets[bucket2.Name])
@@ -59,19 +67,15 @@ func TestCHashCreateBucket(t *testing.T) {
 
 func TestCHashRemoveBucket(t *testing.T) {
 	hash := New()
-	err := hash.CreateBucket("werbenhu1", 2000)
-	assert.Nil(t, err)
-	bucket1, err := hash.GetBucket("werbenhu1")
+	bucket1, err := hash.CreateBucket("werbenhu1", 2000)
 	assert.Nil(t, err)
 	assert.NotNil(t, bucket1)
 
-	err = hash.CreateBucket("werbenhu2", 1000)
+	bucket2, err := hash.CreateBucket("werbenhu2", 1000)
 	assert.Nil(t, err)
-	bucket2, err := hash.GetBucket("werbenhu2")
 	assert.NotNil(t, bucket2)
-	assert.Nil(t, err)
-	assert.Equal(t, 2, len(hash.buckets))
 
+	assert.Equal(t, 2, len(hash.buckets))
 	hash.RemoveBucket("werbenhu1")
 	assert.Equal(t, 1, len(hash.buckets))
 

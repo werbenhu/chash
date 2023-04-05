@@ -10,21 +10,29 @@ With Go module support, simply add the following import
 
 ### Simple Usage
 ```
-group, _ := chash.CreateGroup("db", 10000)
+// chash 
+dbGroup, _ := chash.CreateGroup("db", 10000)
+dbGroup.Insert("192.168.1.100:3306", []byte("mysql0-info"))
+dbGroup.Insert("192.168.1.101:3306", []byte("mysql1-info"))
+host, info, err := dbGroup.Match("user-id")
 
-group.Insert("192.168.1.100:3306", []byte("mysql0-info"))
-group.Insert("192.168.1.101:3306", []byte("mysql1-info"))
+webGroup, _ := chash.CreateGroup("web", 10000)
+webGroup.Insert("192.168.2.100:80", []byte("web0-info"))
+webGroup.Insert("192.168.2.101:80", []byte("web1-info"))
+host, info, err := webGroup.Match("user-id")
 
-host, info, err := group.Match("user-id")
+dbGroup, _ := chash.GetGroup("db")
+dbGroup.Insert("192.168.1.103:3306", []byte("mysql3-info"))
+
 ```
 
 #### Single Group
 ```
+// you need to manager groups if there is more than one group.
 group := chash.NewGroup("db", 10000)
 
 group.Insert("192.168.1.100:3306", []byte("mysql0-info"))
 group.Insert("192.168.1.101:3306", []byte("mysql1-info"))
-
 host, info, err := group.Match("user-id")
 ```
 

@@ -13,7 +13,7 @@ import (
 func TestNewGroup(t *testing.T) {
 	group := NewGroup("test", 10000)
 	assert.NotNil(t, group)
-	assert.NotNil(t, group.Agents)
+	assert.NotNil(t, group.Elements)
 	assert.NotNil(t, group.circle)
 	assert.NotNil(t, group.rows)
 	assert.Equal(t, "test", group.Name)
@@ -23,7 +23,7 @@ func TestNewGroup(t *testing.T) {
 func TestGroupInit(t *testing.T) {
 	group := &Group{}
 	group.Init()
-	assert.NotNil(t, group.Agents)
+	assert.NotNil(t, group.Elements)
 	assert.NotNil(t, group.circle)
 	assert.NotNil(t, group.rows)
 }
@@ -37,10 +37,10 @@ func TestGroupInsert(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 10000, len(group.circle))
 	assert.Equal(t, 10000, len(group.rows))
-	assert.Equal(t, 1, len(group.Agents))
+	assert.Equal(t, 1, len(group.Elements))
 
-	assert.Equal(t, key, group.Agents[key].Key)
-	assert.Equal(t, payload, group.Agents[key].Payload)
+	assert.Equal(t, key, group.Elements[key].Key)
+	assert.Equal(t, payload, group.Elements[key].Payload)
 
 	err = group.Insert(key, payload)
 	assert.Equal(t, ErrKeyExisted, err)
@@ -53,14 +53,14 @@ func TestGroupDelete(t *testing.T) {
 	group.Insert(key, payload)
 	assert.Equal(t, 10000, len(group.circle))
 	assert.Equal(t, 10000, len(group.rows))
-	assert.Equal(t, 1, len(group.Agents))
-	assert.Equal(t, key, group.Agents[key].Key)
-	assert.Equal(t, payload, group.Agents[key].Payload)
+	assert.Equal(t, 1, len(group.Elements))
+	assert.Equal(t, key, group.Elements[key].Key)
+	assert.Equal(t, payload, group.Elements[key].Payload)
 
 	group.Delete(key)
 	assert.Equal(t, 0, len(group.circle))
 	assert.Equal(t, 0, len(group.rows))
-	assert.Equal(t, 0, len(group.Agents))
+	assert.Equal(t, 0, len(group.Elements))
 }
 
 func TestGroupMatch(t *testing.T) {
@@ -70,7 +70,7 @@ func TestGroupMatch(t *testing.T) {
 	group.Insert(setKey, setPayload)
 	assert.Equal(t, 10000, len(group.circle))
 	assert.Equal(t, 10000, len(group.rows))
-	assert.Equal(t, 1, len(group.Agents))
+	assert.Equal(t, 1, len(group.Elements))
 
 	key, payload, err := group.Match("werbenhuxxxxx")
 	assert.Nil(t, err)
@@ -85,12 +85,12 @@ func TestGroupAll(t *testing.T) {
 	group.Insert("192.168.1.100:1883", []byte("werbenhu100"))
 	assert.Equal(t, 10000, len(group.circle))
 	assert.Equal(t, 10000, len(group.rows))
-	assert.Equal(t, 1, len(group.Agents))
+	assert.Equal(t, 1, len(group.Elements))
 
 	group.Insert("192.168.1.101:1883", []byte("werbenhu101"))
 	assert.Equal(t, 20000, len(group.circle))
 	assert.Equal(t, 20000, len(group.rows))
-	assert.Equal(t, 2, len(group.Agents))
+	assert.Equal(t, 2, len(group.Elements))
 
 	key, payload, err := group.Match("werbenhuxxxxx")
 	assert.Nil(t, err)

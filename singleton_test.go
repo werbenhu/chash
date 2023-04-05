@@ -70,7 +70,7 @@ func TestCHashSingletonSerialize(t *testing.T) {
 	singleton.Insert("werbenhu2", "192.168.2.102:8080", []byte("werbenhu202"))
 
 	bs, err := Serialize()
-	expert := `{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"agents":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"agents":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`
+	expert := `{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"elements":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"elements":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`
 
 	assert.Nil(t, err)
 	assert.Equal(t, expert, string(bs))
@@ -78,7 +78,7 @@ func TestCHashSingletonSerialize(t *testing.T) {
 
 func TestCHashSingletonRestore(t *testing.T) {
 	singleton = nil
-	data := []byte(`{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"agents":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"agents":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`)
+	data := []byte(`{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"elements":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"elements":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`)
 	err := Restore(data)
 	assert.Nil(t, err)
 
@@ -86,7 +86,7 @@ func TestCHashSingletonRestore(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, group1)
 	assert.Equal(t, 4000, len(group1.rows))
-	assert.Equal(t, group1.Agents, map[string]*Agent{
+	assert.Equal(t, group1.Elements, map[string]*Element{
 		"192.168.1.101:8080": {
 			Key:     "192.168.1.101:8080",
 			Payload: []byte("werbenhu101"),
@@ -101,7 +101,7 @@ func TestCHashSingletonRestore(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, group2)
 	assert.Equal(t, 2000, len(group2.rows))
-	assert.Equal(t, group2.Agents, map[string]*Agent{
+	assert.Equal(t, group2.Elements, map[string]*Element{
 		"192.168.2.101:8080": {
 			Key:     "192.168.2.101:8080",
 			Payload: []byte("werbenhu201"),

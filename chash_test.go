@@ -95,7 +95,7 @@ func TestCHashInsert(t *testing.T) {
 	group1, err := hash.GetGroup("werbenhu1")
 	assert.Nil(t, err)
 	assert.NotNil(t, group1)
-	assert.Equal(t, group1.Agents, map[string]*Agent{
+	assert.Equal(t, group1.Elements, map[string]*Element{
 		"192.168.1.101:8080": {
 			Key:     "192.168.1.101:8080",
 			Payload: []byte("werbenhu101"),
@@ -117,7 +117,7 @@ func TestCHashInsert(t *testing.T) {
 	group2, err := hash.GetGroup("werbenhu2")
 	assert.Nil(t, err)
 	assert.NotNil(t, group2)
-	assert.Equal(t, group2.Agents, map[string]*Agent{
+	assert.Equal(t, group2.Elements, map[string]*Element{
 		"192.168.2.101:8080": {
 			Key:     "192.168.2.101:8080",
 			Payload: []byte("werbenhu201"),
@@ -136,7 +136,7 @@ func TestCHashInsert(t *testing.T) {
 	assert.Equal(t, ErrGroupNotFound, err)
 }
 
-func TestCHashDeleteAgent(t *testing.T) {
+func TestCHashDeleteElement(t *testing.T) {
 	hash := New()
 	hash.CreateGroup("werbenhu1", 10000)
 	hash.Insert("werbenhu1", "192.168.1.101:8080", []byte("werbenhu101"))
@@ -146,18 +146,18 @@ func TestCHashDeleteAgent(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, group)
 
-	assert.Equal(t, 2, len(group.Agents))
+	assert.Equal(t, 2, len(group.Elements))
 	err = hash.Delete("werbenhu1", "192.168.1.101:8080")
-	assert.Equal(t, 1, len(group.Agents))
+	assert.Equal(t, 1, len(group.Elements))
 	assert.Nil(t, err)
 
 	err = hash.Delete("werbenhu1", "192.168.1.102:8080")
 	assert.Nil(t, err)
-	assert.Equal(t, 0, len(group.Agents))
+	assert.Equal(t, 0, len(group.Elements))
 
 	err = hash.Delete("werbenhu1", "192.168.1.101:8080")
 	assert.Nil(t, err)
-	assert.Equal(t, 0, len(group.Agents))
+	assert.Equal(t, 0, len(group.Elements))
 }
 
 func TestCHashSerialize(t *testing.T) {
@@ -172,7 +172,7 @@ func TestCHashSerialize(t *testing.T) {
 	hash.Insert("werbenhu2", "192.168.2.102:8080", []byte("werbenhu202"))
 
 	bs, err := hash.Serialize()
-	expert := `{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"agents":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"agents":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`
+	expert := `{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"elements":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"elements":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`
 
 	assert.Nil(t, err)
 	assert.Equal(t, expert, string(bs))
@@ -180,7 +180,7 @@ func TestCHashSerialize(t *testing.T) {
 
 func TestCHashRestore(t *testing.T) {
 	hash := New()
-	data := []byte(`{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"agents":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"agents":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`)
+	data := []byte(`{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"elements":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"elements":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`)
 	err := hash.Restore(data)
 	assert.Nil(t, err)
 
@@ -188,7 +188,7 @@ func TestCHashRestore(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, group1)
 	assert.Equal(t, 4000, len(group1.rows))
-	assert.Equal(t, group1.Agents, map[string]*Agent{
+	assert.Equal(t, group1.Elements, map[string]*Element{
 		"192.168.1.101:8080": {
 			Key:     "192.168.1.101:8080",
 			Payload: []byte("werbenhu101"),
@@ -203,7 +203,7 @@ func TestCHashRestore(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, group2)
 	assert.Equal(t, 2000, len(group2.rows))
-	assert.Equal(t, group2.Agents, map[string]*Agent{
+	assert.Equal(t, group2.Elements, map[string]*Element{
 		"192.168.2.101:8080": {
 			Key:     "192.168.2.101:8080",
 			Payload: []byte("werbenhu201"),

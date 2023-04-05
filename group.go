@@ -10,40 +10,40 @@ import (
 	"sync"
 )
 
-type Agent struct {
+type Element struct {
 	Key     string `json:"key"`
 	Payload []byte `json:"payload"`
 }
 
 type Group struct {
 	sync.RWMutex
-	Name             string            `json:"name"`
-	NumberOfReplicas int               `json:"numberOfReplicas"`
-	Agents           map[string]*Agent `json:"agents"`
+	Name             string              `json:"name"`
+	NumberOfReplicas int                 `json:"numberOfReplicas"`
+	Elements         map[string]*Element `json:"elements"`
 
-	circle Indexes
-	rows   map[uint32]*Agent
+	circle Circle
+	rows   map[uint32]*Element
 }
 
 func NewGroup(name string, replicas int) *Group {
 	return &Group{
 		Name:             name,
 		NumberOfReplicas: replicas,
-		Agents:           make(map[string]*Agent),
-		circle:           make(Indexes, 0),
-		rows:             make(map[uint32]*Agent),
+		Elements:         make(map[string]*Element),
+		circle:           make(Circle, 0),
+		rows:             make(map[uint32]*Element),
 	}
 }
 
 func (b *Group) Init() {
-	if b.Agents == nil {
-		b.Agents = make(map[string]*Agent)
+	if b.Elements == nil {
+		b.Elements = make(map[string]*Element)
 	}
 	if b.circle == nil {
-		b.circle = make(Indexes, 0)
+		b.circle = make(Circle, 0)
 	}
 	if b.rows == nil {
-		b.rows = make(map[uint32]*Agent)
+		b.rows = make(map[uint32]*Element)
 	}
 }
 
@@ -60,36 +60,36 @@ func (b *Group) virtualKey(key string, idx int) string {
 	return strconv.Itoa(idx) + key
 }
 
-func (b *Group) hashAgent(agent *Agent) {
+func (b *Group) hashElement(element *Element) {
 	for i := 0; i < b.NumberOfReplicas; i++ {
-		virtualKey := b.virtualKey(agent.Key, i)
+		virtualKey := b.virtualKey(element.Key, i)
 		crc := b.hash(virtualKey)
-		b.rows[crc] = agent
+		b.rows[crc] = element
 		b.circle = append(b.circle, crc)
 	}
 	b.circle.Sort()
 }
 
 func (b *Group) Insert(key string, payload []byte) error {
-	agent := &Agent{Key: key, Payload: payload}
+	element := &Element{Key: key, Payload: payload}
 	b.Lock()
 	defer b.Unlock()
 
-	if _, ok := b.Agents[agent.Key]; ok {
+	if _, ok := b.Elements[element.Key]; ok {
 		return ErrKeyExisted
 	}
 
-	b.Agents[agent.Key] = agent
-	b.hashAgent(agent)
+	b.Elements[element.Key] = element
+	b.hashElement(element)
 	return nil
 }
 
 func (b *Group) Delete(key string) error {
-	agent := &Agent{Key: key, Payload: nil}
+	element := &Element{Key: key, Payload: nil}
 	b.Lock()
 	defer b.Unlock()
 
-	delete(b.Agents, agent.Key)
+	delete(b.Elements, element.Key)
 	for i := 0; i < b.NumberOfReplicas; i++ {
 		virtualKey := b.virtualKey(key, i)
 		crc := b.hash(virtualKey)

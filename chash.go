@@ -92,8 +92,8 @@ func (c *CHash) Restore(data []byte) error {
 	}
 	for _, group := range c.groups {
 		group.Init()
-		for _, node := range group.Agents {
-			group.hashAgent(node)
+		for _, node := range group.Elements {
+			group.hashElement(node)
 		}
 	}
 	return nil

@@ -8,25 +8,25 @@ import (
 	"sort"
 )
 
-type Indexes []uint32
+type Circle []uint32
 
-func (idx Indexes) Len() int {
+func (idx Circle) Len() int {
 	return len(idx)
 }
 
-func (idx Indexes) Swap(i, j int) {
+func (idx Circle) Swap(i, j int) {
 	idx[i], idx[j] = idx[j], idx[i]
 }
 
-func (idx Indexes) Less(i, j int) bool {
+func (idx Circle) Less(i, j int) bool {
 	return idx[i] < (idx[j])
 }
 
-func (idx Indexes) Sort() {
+func (idx Circle) Sort() {
 	sort.Sort(idx)
 }
 
-func (idx Indexes) Search(target uint32) (int, bool) {
+func (idx Circle) Search(target uint32) (int, bool) {
 	if len(idx) == 0 {
 		return 0, false
 	}
@@ -44,7 +44,7 @@ func (idx Indexes) Search(target uint32) (int, bool) {
 }
 
 // Match returns an element close to where key hashes to in the circle.
-func (idx Indexes) Match(target uint32) (int, bool) {
+func (idx Circle) Match(target uint32) (int, bool) {
 	if len(idx) == 0 {
 		return 0, false
 	}

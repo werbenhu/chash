@@ -9,24 +9,45 @@ With Go module support, simply add the following import
 
 
 ### Simple Usage
+
+#### Create a group
 ```
-// create a group 
+// create db group 
 dbGroup, _ := chash.CreateGroup("db", 10000)
-// Insert() insert elements
+
+// insert elements
 dbGroup.Insert("192.168.1.100:3306", []byte("mysql0-info"))
 dbGroup.Insert("192.168.1.101:3306", []byte("mysql1-info"))
 
-// Match(key) returns an element close to where key hashes to in the circle.
-host, info, err := dbGroup.Match("user-id")
-
+// create second group
 webGroup, _ := chash.CreateGroup("web", 10000)
+
+// insert elements
 webGroup.Insert("192.168.2.100:80", []byte("web0-info"))
 webGroup.Insert("192.168.2.101:80", []byte("web1-info"))
-host, info, err := webGroup.Match("user-id")
+```
 
-dbGroup, _ := chash.GetGroup("db")
+```
+// use existed group
+dbGroup, err := chash.GetGroup("db")
+if err != nil {
+    log.Printf("ERROR get group failed, err:%s\n", err.Error())
+}
+
 dbGroup.Insert("192.168.1.103:3306", []byte("mysql3-info"))
 host, info, err := dbGroup.Match("user-id")
+```
+
+#### Match the key from a group
+```
+// match an element close to where key hashes to in the circle.
+host, info, err := dbGroup.Match("user-id")
+```
+
+#### Delete element from a group
+```
+// delete element
+dbGroup.Delete("192.168.1.102:3306")
 ```
 
 #### Single Group

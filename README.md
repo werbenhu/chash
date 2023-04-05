@@ -10,7 +10,7 @@ With Go module support, simply add the following import
 
 ### Simple Usage
 ```
-group, _ := chash.CreateGroup("db-consistent-hash", 10000)
+group, _ := chash.CreateGroup("db", 10000)
 
 group.Insert("192.168.1.100:3306", []byte("mysql0-info"))
 group.Insert("192.168.1.101:3306", []byte("mysql1-info"))
@@ -19,13 +19,14 @@ host, info, err := group.Match("user-id")
 ```
 
 #### Single Group
-
-group := chash.NewGroup("db-consistent-hash", 10000)
+```
+group := chash.NewGroup("db", 10000)
 
 group.Insert("192.168.1.100:3306", []byte("mysql0-info"))
 group.Insert("192.168.1.101:3306", []byte("mysql1-info"))
 
 host, info, err := group.Match("user-id")
+```
 
 ### Examples
 See the [example](example/main.go) .

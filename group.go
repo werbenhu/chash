@@ -113,3 +113,15 @@ func (b *Group) Match(key string) (string, []byte, error) {
 	}
 	return "", nil, ErrNoResultMatched
 }
+
+func (b *Group) GetElements() []*Element {
+	b.RLock()
+	defer b.RUnlock()
+
+	els := make([]*Element, 0)
+	for _, e := range b.Elements {
+		els = append(els, e)
+	}
+
+	return els
+}

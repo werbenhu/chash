@@ -115,6 +115,24 @@ func TestGroupAll(t *testing.T) {
 	}
 }
 
+func TestGroupGetElements(t *testing.T) {
+	group := NewGroup("test", 10000)
+	group.Insert("192.168.1.100:1883", []byte("werbenhu100"))
+	group.Insert("192.168.1.101:1883", []byte("werbenhu101"))
+
+	els := group.GetElements()
+	assert.Equal(t, []*Element{
+		{
+			Key:     "192.168.1.100:1883",
+			Payload: []byte("werbenhu100"),
+		},
+		{
+			Key:     "192.168.1.101:1883",
+			Payload: []byte("werbenhu101"),
+		},
+	}, els)
+}
+
 func BenchmarkGroupHash(b *testing.B) {
 	b.ResetTimer()
 	key := "192.168.1.100:1883"

@@ -50,7 +50,7 @@ host, info, err := dbGroup.Match("user-id")
 dbGroup.Delete("192.168.1.102:3306")
 ```
 
-### Get all elements of a group
+#### Get all elements of a group
 ```
 elements := dbGroup.GetElemens()
 ```

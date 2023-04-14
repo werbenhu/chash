@@ -43,6 +43,21 @@ func TestCHashSingletonRemoveGroup(t *testing.T) {
 	assert.Equal(t, ErrGroupNotFound, err)
 }
 
+func TestSingletonRemoveAllGroup(t *testing.T) {
+	singleton = nil
+	group1, err := CreateGroup("werbenhu1", 2000)
+	assert.Nil(t, err)
+	assert.NotNil(t, group1)
+
+	group2, err := CreateGroup("werbenhu2", 1000)
+	assert.Nil(t, err)
+	assert.NotNil(t, group2)
+
+	assert.Equal(t, 2, len(singleton.groups))
+	RemoveAllGroup()
+	assert.Equal(t, 0, len(singleton.groups))
+}
+
 func TestCHashSingletonGetGroup(t *testing.T) {
 	singleton = nil
 	group1, err := CreateGroup("werbenhu2", 2000)

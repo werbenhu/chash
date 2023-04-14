@@ -27,6 +27,16 @@ func RemoveGroup(groupName string) {
 	singleton.RemoveGroup(groupName)
 }
 
+func RemoveAllGroup() {
+	mu.Lock()
+	defer mu.Unlock()
+
+	if singleton == nil {
+		return
+	}
+	singleton.RemoveAllGroup()
+}
+
 func GetGroup(groupName string) (*Group, error) {
 	mu.Lock()
 	defer mu.Unlock()

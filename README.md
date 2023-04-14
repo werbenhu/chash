@@ -1,5 +1,25 @@
 # chash
-Consistent hashing written by Go
+**Consistent hashing written by Go**
+
+## What is consistent hashing
+
+> Consistent hashing is a hashing technique that performs really well when operated in a dynamic environment where the distributed system scales up and scales down frequently. 
+
+### The problem of naive hashing function
+
+A naive hashing function is key % n where n is the number of servers.
+It has two major drawbacks:
+- 1. NOT horizontally scalable, or in other words, NOT partition tolerant. When you add new servers, all existing mapping are broken. It could introduce painful maintenance work and downtime to the system.
+- 2. May NOT be load balanced. If the data is not uniformly distributed, this might cause some servers to be hot and saturated while others idle and almost empty.
+
+Problem 2 can be resolved by hashing the key first, hash(key) % n, so that the hashed keys will be likely to be distributed more evenly. But this can't solve the problem 1. We need to find a solution that can distribute the keys and is not dependent on n.
+
+### Consistent Hashing
+Consistent Hashing allows distributing data in such a way that minimize reorganization when nodes are added or removed, hence making the system easier to scale up or down.
+The key idea is that it's a distribution scheme that DOES NOT depend directly on the number of servers.
+In Consistent Hashing, when the hash table is resized, in general only k / n keys need to be remapped, where k is the total number of keys and n is the total number of servers.
+When a new node is added, it takes shares from a few hosts without touching other's shares
+When a node is removed, its shares are shared by other hosts.
 
 ### Getting chash
 

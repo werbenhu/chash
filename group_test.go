@@ -28,6 +28,27 @@ func TestGroupInit(t *testing.T) {
 	assert.NotNil(t, group.rows)
 }
 
+func TestGroupUpsert(t *testing.T) {
+	group := NewGroup("test", 10000)
+
+	key, payload := "192.168.1.100:1883", []byte("werbenhu100")
+	err := group.Upsert(key, payload)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 10000, len(group.circle))
+	assert.Equal(t, 10000, len(group.rows))
+	assert.Equal(t, 1, len(group.Elements))
+
+	assert.Equal(t, key, group.Elements[key].Key)
+	assert.Equal(t, payload, group.Elements[key].Payload)
+
+	payload = []byte("werbenhu101")
+	err = group.Upsert(key, payload)
+	assert.Nil(t, err)
+	assert.Equal(t, key, group.Elements[key].Key)
+	assert.Equal(t, payload, group.Elements[key].Payload)
+}
+
 func TestGroupInsert(t *testing.T) {
 	group := NewGroup("test", 10000)
 
@@ -116,7 +137,7 @@ func TestGroupAll(t *testing.T) {
 }
 
 func TestGroupGetElements(t *testing.T) {
-	group := NewGroup("test", 10000)
+	group := NewGroup("testgetelements", 10000)
 	group.Insert("192.168.1.100:1883", []byte("werbenhu100"))
 	group.Insert("192.168.1.101:1883", []byte("werbenhu101"))
 

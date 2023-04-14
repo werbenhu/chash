@@ -70,6 +70,20 @@ func (b *Group) hashElement(element *Element) {
 	b.circle.Sort()
 }
 
+func (b *Group) Upsert(key string, payload []byte) error {
+	element := &Element{Key: key, Payload: payload}
+	b.Lock()
+	defer b.Unlock()
+	if _, ok := b.Elements[element.Key]; ok {
+		if err := b.delete(key); err != nil {
+			return err
+		}
+	}
+	b.Elements[element.Key] = element
+	b.hashElement(element)
+	return nil
+}
+
 func (b *Group) Insert(key string, payload []byte) error {
 	element := &Element{Key: key, Payload: payload}
 	b.Lock()
@@ -84,11 +98,8 @@ func (b *Group) Insert(key string, payload []byte) error {
 	return nil
 }
 
-func (b *Group) Delete(key string) error {
+func (b *Group) delete(key string) error {
 	element := &Element{Key: key, Payload: nil}
-	b.Lock()
-	defer b.Unlock()
-
 	delete(b.Elements, element.Key)
 	for i := 0; i < b.NumberOfReplicas; i++ {
 		virtualKey := b.virtualKey(key, i)
@@ -100,6 +111,12 @@ func (b *Group) Delete(key string) error {
 		}
 	}
 	return nil
+}
+
+func (b *Group) Delete(key string) error {
+	b.Lock()
+	defer b.Unlock()
+	return b.delete(key)
 }
 
 func (b *Group) Match(key string) (string, []byte, error) {

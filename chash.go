@@ -48,6 +48,15 @@ func (c *CHash) RemoveGroup(groupName string) {
 	delete(c.groups, groupName)
 }
 
+func (c *CHash) RemoveAllGroup() {
+	c.Lock()
+	defer c.Unlock()
+
+	for k := range c.groups {
+		delete(c.groups, k)
+	}
+}
+
 func (c *CHash) Insert(groupName string, key string, payload []byte) error {
 	c.Lock()
 	group, ok := c.groups[groupName]

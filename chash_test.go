@@ -83,6 +83,21 @@ func TestCHashRemoveGroup(t *testing.T) {
 	assert.Equal(t, ErrGroupNotFound, err)
 }
 
+func TestCHashRemoveAllGroup(t *testing.T) {
+	hash := New()
+	group1, err := hash.CreateGroup("werbenhu1", 2000)
+	assert.Nil(t, err)
+	assert.NotNil(t, group1)
+
+	group2, err := hash.CreateGroup("werbenhu2", 1000)
+	assert.Nil(t, err)
+	assert.NotNil(t, group2)
+
+	assert.Equal(t, 2, len(hash.groups))
+	hash.RemoveAllGroup()
+	assert.Equal(t, 0, len(hash.groups))
+}
+
 func TestCHashInsert(t *testing.T) {
 	hash := New()
 	hash.CreateGroup("werbenhu1", 10000)

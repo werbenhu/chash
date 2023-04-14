@@ -16,8 +16,11 @@ Problem 2 can be resolved by hashing the key first, hash(key) % n, so that the h
 
 ### Consistent Hashing
 Consistent Hashing allows distributing data in such a way that minimize reorganization when nodes are added or removed, hence making the system easier to scale up or down.
+
 The key idea is that it's a distribution scheme that DOES NOT depend directly on the number of servers.
+
 In Consistent Hashing, when the hash table is resized, in general only k / n keys need to be remapped, where k is the total number of keys and n is the total number of servers.
+
 When a new node is added, it takes shares from a few hosts without touching other's shares
 When a node is removed, its shares are shared by other hosts.
 

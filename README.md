@@ -24,16 +24,16 @@ In Consistent Hashing, when the hash table is resized, in general only k / n key
 When a new node is added, it takes shares from a few hosts without touching other's shares
 When a node is removed, its shares are shared by other hosts.
 
-### Getting chash
+## Getting started
 
 With Go module support, simply add the following import
 
 `import "github.com/werbenhu/chash"`
 
 
-### Simple Usage
+## Simple Usage
 
-#### Create a group
+### Create a group
 ```
 // create db group 
 dbGroup, _ := chash.CreateGroup("db", 10000)
@@ -61,24 +61,24 @@ dbGroup.Insert("192.168.1.103:3306", []byte("mysql3-info"))
 host, info, err := dbGroup.Match("user-id")
 ```
 
-#### Match the element for a key
+### Match the element for a key
 ```
 // match an element close to where key hashes to in the circle.
 host, info, err := dbGroup.Match("user-id")
 ```
 
-#### Delete element from a group
+### Delete element from a group
 ```
 // delete element
 dbGroup.Delete("192.168.1.102:3306")
 ```
 
-#### Get all elements of a group
+### Get all elements of a group
 ```
 elements := dbGroup.GetElemens()
 ```
 
-#### Single Group
+### Single Group
 ```
 // you need to manager groups if there is more than one group.
 group := chash.NewGroup("db", 10000)
@@ -88,8 +88,8 @@ group.Insert("192.168.1.101:3306", []byte("mysql1-info"))
 host, info, err := group.Match("user-id")
 ```
 
-### Examples
+## Examples
 See the [example](example/main.go) .
 
-### Contributions
+## Contributions
 Contributions and feedback are both welcomed and encouraged! Open an [issue](https://github.com/werbenhu/chash/issues) to report a bug, ask a question, or make a feature request.

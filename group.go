@@ -75,9 +75,8 @@ func (b *Group) Upsert(key string, payload []byte) error {
 	b.Lock()
 	defer b.Unlock()
 	if _, ok := b.Elements[element.Key]; ok {
-		if err := b.delete(key); err != nil {
-			return err
-		}
+		b.delete(key)
+
 	}
 	b.Elements[element.Key] = element
 	b.hashElement(element)
@@ -98,7 +97,7 @@ func (b *Group) Insert(key string, payload []byte) error {
 	return nil
 }
 
-func (b *Group) delete(key string) error {
+func (b *Group) delete(key string) {
 	element := &Element{Key: key, Payload: nil}
 	delete(b.Elements, element.Key)
 	for i := 0; i < b.NumberOfReplicas; i++ {
@@ -110,13 +109,12 @@ func (b *Group) delete(key string) error {
 			b.circle = append(b.circle[:val], b.circle[val+1:]...)
 		}
 	}
-	return nil
 }
 
-func (b *Group) Delete(key string) error {
+func (b *Group) Delete(key string) {
 	b.Lock()
 	defer b.Unlock()
-	return b.delete(key)
+	b.delete(key)
 }
 
 func (b *Group) Match(key string) (string, []byte, error) {

@@ -74,7 +74,8 @@ func (c *CHash) Delete(groupName string, key string) error {
 	if !ok {
 		return ErrGroupNotFound
 	}
-	return group.Delete(key)
+	group.Delete(key)
+	return nil
 }
 
 func (c *CHash) Match(groupName string, key string) (string, []byte, error) {

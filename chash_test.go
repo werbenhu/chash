@@ -176,10 +176,16 @@ func TestCHashDeleteElement(t *testing.T) {
 
 func TestCHashMatch(t *testing.T) {
 	hash := New()
+
+	key, payload, err := hash.Match("test", "xxx")
+	assert.Equal(t, "", key)
+	assert.Nil(t, payload)
+	assert.Equal(t, ErrGroupNotFound, err)
+
 	group, err := hash.CreateGroup("test", 10000)
 	assert.Nil(t, err)
 
-	key, payload, err := hash.Match("test", "werbenhuxxxxx")
+	key, payload, err = hash.Match("test", "werbenhuxxxxx")
 	assert.NotNil(t, err)
 	assert.Equal(t, ErrNoResultMatched, err)
 

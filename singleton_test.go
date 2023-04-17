@@ -31,9 +31,9 @@ func TestCHashSingletonRemoveGroup(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, group1)
 
-	group2, err := CreateGroup("werbenhu2", 1000)
+	group3, err := CreateGroup("werbenhu3", 1000)
 	assert.Nil(t, err)
-	assert.NotNil(t, group2)
+	assert.NotNil(t, group3)
 
 	assert.Equal(t, 2, len(singleton.groups))
 	RemoveGroup("werbenhu1")

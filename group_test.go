@@ -139,6 +139,15 @@ func TestGroupAll(t *testing.T) {
 	}
 }
 
+func TestGroupHash(t *testing.T) {
+	group := NewGroup("testgetelements", 10000)
+	val := group.hash("werben")
+	assert.Equal(t, uint32(3469918211), val)
+
+	val = group.hash("12345678901234567890123456789012345678901234567890123456789012345678901234567890")
+	assert.Equal(t, uint32(2091469426), val)
+}
+
 func TestGroupGetElements(t *testing.T) {
 	group := NewGroup("testgetelements", 10000)
 	group.Insert("192.168.1.100:1883", []byte("werbenhu100"))

@@ -1,3 +1,12 @@
+
+<p align="center">
+
+[![build status](https://github.com/werbenhu/chash/workflows/Go/badge.svg)](https://github.com/werbenhu/chash/actions)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/werbenhu/chash/issues)
+
+</p>
+
+
 # chash
 **Consistent hashing written by Go**
 

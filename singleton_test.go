@@ -26,6 +26,8 @@ func TestCHashSingletonCreateGroup(t *testing.T) {
 
 func TestCHashSingletonRemoveGroup(t *testing.T) {
 	singleton = nil
+	RemoveGroup("werbenhu1")
+	assert.Nil(t, singleton)
 
 	group1, err := CreateGroup("werbenhu1", 2000)
 	assert.Nil(t, err)
@@ -45,6 +47,9 @@ func TestCHashSingletonRemoveGroup(t *testing.T) {
 
 func TestSingletonRemoveAllGroup(t *testing.T) {
 	singleton = nil
+	RemoveAllGroup()
+	assert.Nil(t, singleton)
+
 	group1, err := CreateGroup("werbenhu1", 2000)
 	assert.Nil(t, err)
 	assert.NotNil(t, group1)
@@ -60,21 +65,32 @@ func TestSingletonRemoveAllGroup(t *testing.T) {
 
 func TestCHashSingletonGetGroup(t *testing.T) {
 	singleton = nil
-	group1, err := CreateGroup("werbenhu2", 2000)
-	assert.Nil(t, err)
-	assert.NotNil(t, group1)
 
-	group1, err = GetGroup("werbenhu2")
-	assert.Nil(t, err)
-	assert.NotNil(t, group1)
+	group1, err := GetGroup("werbenhu1")
+	assert.Nil(t, group1)
+	assert.Equal(t, err, ErrGroupNotFound)
+	assert.NotNil(t, singleton)
 
-	group2, err := GetGroup("werbenhu3")
-	assert.Nil(t, group2)
+	group2, err := CreateGroup("werbenhu2", 2000)
+	assert.Nil(t, err)
+	assert.NotNil(t, group2)
+
+	group2, err = GetGroup("werbenhu2")
+	assert.Nil(t, err)
+	assert.NotNil(t, group2)
+
+	group3, err := GetGroup("werbenhu3")
+	assert.Nil(t, group3)
 	assert.Equal(t, ErrGroupNotFound, err)
 }
 
 func TestCHashSingletonSerialize(t *testing.T) {
 	singleton = nil
+	bs, err := Serialize()
+	assert.Nil(t, err)
+	assert.NotNil(t, bs)
+	assert.NotNil(t, singleton)
+
 	CreateGroup("werbenhu1", 2000)
 	CreateGroup("werbenhu2", 1000)
 
@@ -84,7 +100,7 @@ func TestCHashSingletonSerialize(t *testing.T) {
 	singleton.Insert("werbenhu2", "192.168.2.101:8080", []byte("werbenhu201"))
 	singleton.Insert("werbenhu2", "192.168.2.102:8080", []byte("werbenhu202"))
 
-	bs, err := Serialize()
+	bs, err = Serialize()
 	expert := `{"werbenhu1":{"name":"werbenhu1","numberOfReplicas":2000,"elements":{"192.168.1.101:8080":{"key":"192.168.1.101:8080","payload":"d2VyYmVuaHUxMDE="},"192.168.1.102:8080":{"key":"192.168.1.102:8080","payload":"d2VyYmVuaHUxMDI="}}},"werbenhu2":{"name":"werbenhu2","numberOfReplicas":1000,"elements":{"192.168.2.101:8080":{"key":"192.168.2.101:8080","payload":"d2VyYmVuaHUyMDE="},"192.168.2.102:8080":{"key":"192.168.2.102:8080","payload":"d2VyYmVuaHUyMDI="}}}}`
 
 	assert.Nil(t, err)

@@ -2,6 +2,7 @@
 <p align="center">
 
 ![build status]https://github.com/werbenhu/chash/actions/workflows/go.yml/badge.svg) 
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/werbenhu/chash/issues)
 
 </p>
 

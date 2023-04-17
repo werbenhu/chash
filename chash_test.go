@@ -170,9 +170,31 @@ func TestCHashDeleteElement(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 0, len(group.Elements))
 
-	err = hash.Delete("werbenhu1", "192.168.1.101:8080")
+	err = hash.Delete("werbenhu2", "192.168.1.101:8080")
+	assert.Equal(t, ErrGroupNotFound, err)
+}
+
+func TestCHashMatch(t *testing.T) {
+	hash := New()
+	group, err := hash.CreateGroup("test", 10000)
 	assert.Nil(t, err)
-	assert.Equal(t, 0, len(group.Elements))
+
+	key, payload, err := hash.Match("test", "werbenhuxxxxx")
+	assert.NotNil(t, err)
+	assert.Equal(t, ErrNoResultMatched, err)
+
+	setKey, setPayload := "192.168.1.100:1883", []byte("werbenhu100")
+	group.Insert(setKey, setPayload)
+	assert.Equal(t, 10000, len(group.circle))
+	assert.Equal(t, 10000, len(group.rows))
+	assert.Equal(t, 1, len(group.Elements))
+
+	key, payload, err = hash.Match("test", "werbenhuxxxxx")
+	assert.Nil(t, err)
+	assert.NotNil(t, payload)
+	assert.NotEqual(t, key, "")
+	assert.Equal(t, setKey, key)
+	assert.Equal(t, setPayload, payload)
 }
 
 func TestCHashSerialize(t *testing.T) {

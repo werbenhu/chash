@@ -27,12 +27,6 @@ jobs:
     - name: Test
       run: go test -v ./...
 
-
-name: coverage
-
-on: [push, pull_request]
-
-jobs:
   test:
     name: Test with Coverage
     runs-on: ubuntu-latest

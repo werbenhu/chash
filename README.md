@@ -2,7 +2,7 @@
 <p align="center">
 
 [![build status](https://github.com/werbenhu/chash/workflows/Go/badge.svg)](https://github.com/werbenhu/chash/actions)
-[![Coverage Status](https://coveralls.io/repos/github/werbenhu/chash/badge.svg)](https://coveralls.io/github/werbenhu/chash)
+[![Coverage Status](https://coveralls.io/repos/github/werbenhu/chash/badge.svg?branch=main)](https://coveralls.io/github/werbenhu/chash?branch=main)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/werbenhu/chash/issues)
 
 </p>

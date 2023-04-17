@@ -1,3 +1,11 @@
+
+<p align="center">
+
+![build status]https://github.com/werbenhu/chash/actions/workflows/go.yml/badge.svg) 
+
+</p>
+
+
 # chash
 **Consistent hashing written by Go**
 

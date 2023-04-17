@@ -96,6 +96,13 @@ func TestCircleSearch(t *testing.T) {
 			ret:    1,
 			ok:     true,
 		},
+		{
+			//No.11
+			idx:    Circle{0, 2, 4, 6, 8, 10},
+			target: uint32(12),
+			ret:    0,
+			ok:     false,
+		},
 	}
 
 	for i, item := range items {

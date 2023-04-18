@@ -1,16 +1,9 @@
 
-<p align="center">
-
+<div align='center'>
 <a href="https://github.com/werbenhu/chash/actions"><img src="https://github.com/werbenhu/chash/workflows/Go/badge.svg"></a>
-
-<a href="https://coveralls.io/github/werbenhu/chash?branch=main"><img src="https://coveralls.io/repos/github/werbenhu/chash/badge.svg"></a>
-
+<a href="https://coveralls.io/github/werbenhu/chash?branch=main"><img src="https://coveralls.io/repos/github/werbenhu/chash/badge.svg"></a>   
 <a href="https://github.com/werbenhu/chash"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
-
-<!-- [![build status](https://github.com/werbenhu/chash/workflows/Go/badge.svg)](https://github.com/werbenhu/chash/actions)
-[![Coverage Status](https://coveralls.io/repos/github/werbenhu/chash/badge.svg?branch=main)](https://coveralls.io/github/werbenhu/chash?branch=main)
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/werbenhu/chash) -->
-</p>
+</div>
 
 # chash
 **Consistent hashing written by Go**

@@ -6,6 +6,7 @@
 <a href="https://pkg.go.dev/github.com/werbenhu/chash"><img src="https://pkg.go.dev/badge/github.com/werbenhu/chash.svg"></a>
 </div>
 
+[English](README.md) | [简体中文](README-CN.md)
 # chash
 **Consistent hashing written by Go**
 
@@ -43,23 +44,24 @@ With Go module support, simply add the following import
 
 ### Create a group
 ```
-// create db group 
+// Create a "db" group using chash.CreateGroup(),
+// which internally manages the group using a global singleton chash object.
 dbGroup, _ := chash.CreateGroup("db", 10000)
 
-// insert elements
+// Insert elements (multiple MySQL servers).
 dbGroup.Insert("192.168.1.100:3306", []byte("mysql0-info"))
 dbGroup.Insert("192.168.1.101:3306", []byte("mysql1-info"))
 
-// create second group
+// Create a second group.
 webGroup, _ := chash.CreateGroup("web", 10000)
 
-// insert elements
+// Insert elements (multiple HTTP servers).
 webGroup.Insert("192.168.2.100:80", []byte("web0-info"))
 webGroup.Insert("192.168.2.101:80", []byte("web1-info"))
 ```
 
 ```
-// use existed group
+// Use an existing group.
 dbGroup, err := chash.GetGroup("db")
 if err != nil {
     log.Printf("ERROR get group failed, err:%s\n", err.Error())
@@ -69,7 +71,7 @@ dbGroup.Insert("192.168.1.103:3306", []byte("mysql3-info"))
 host, info, err := dbGroup.Match("user-id")
 ```
 
-### Match the element for a key
+### Match a MySQL server for a user ID
 ```
 // match an element close to where key hashes to in the circle.
 host, info, err := dbGroup.Match("user-id")
@@ -86,9 +88,10 @@ dbGroup.Delete("192.168.1.102:3306")
 elements := dbGroup.GetElemens()
 ```
 
-### Single Group
+### Using an independent group
 ```
-// you need to manager groups if there is more than one group.
+// A group created by chash.NewGrou() is not managed by the global chash object
+// You need to manage groups yourself if there are more than one group.
 group := chash.NewGroup("db", 10000)
 
 group.Insert("192.168.1.100:3306", []byte("mysql0-info"))

@@ -10,11 +10,13 @@ import (
 	"sync"
 )
 
+// Element represents a single element to be stored in the cache
 type Element struct {
 	Key     string `json:"key"`
 	Payload []byte `json:"payload"`
 }
 
+// Group represents a group of elements to be stored in the cache
 type Group struct {
 	sync.RWMutex
 	Name             string              `json:"name"`
@@ -25,6 +27,7 @@ type Group struct {
 	rows   map[uint32]*Element
 }
 
+// NewGroup creates a new cache group with the given name and number of replicas
 func NewGroup(name string, replicas int) *Group {
 	return &Group{
 		Name:             name,
@@ -35,6 +38,7 @@ func NewGroup(name string, replicas int) *Group {
 	}
 }
 
+// Init initializes the group's elements, circle, and rows maps
 func (b *Group) Init() {
 	if b.Elements == nil {
 		b.Elements = make(map[string]*Element)
@@ -47,6 +51,7 @@ func (b *Group) Init() {
 	}
 }
 
+// hash calculates the CRC32 hash for the given key
 func (b *Group) hash(key string) uint32 {
 	if len(key) < 64 {
 		var scratch [64]byte
@@ -56,10 +61,12 @@ func (b *Group) hash(key string) uint32 {
 	return crc32.ChecksumIEEE([]byte(key))
 }
 
+// virtualKey creates a virtual key by appending the index to the original key
 func (b *Group) virtualKey(key string, idx int) string {
 	return strconv.Itoa(idx) + key
 }
 
+// hashElement hashes the given element and adds it to the circle and rows maps
 func (b *Group) hashElement(element *Element) {
 	for i := 0; i < b.NumberOfReplicas; i++ {
 		virtualKey := b.virtualKey(element.Key, i)
@@ -70,6 +77,7 @@ func (b *Group) hashElement(element *Element) {
 	b.circle.Sort()
 }
 
+// Upsert adds or updates an element in the group
 func (b *Group) Upsert(key string, payload []byte) error {
 	element := &Element{Key: key, Payload: payload}
 	b.Lock()
@@ -83,6 +91,7 @@ func (b *Group) Upsert(key string, payload []byte) error {
 	return nil
 }
 
+// Insert adds a new element to the group
 func (b *Group) Insert(key string, payload []byte) error {
 	element := &Element{Key: key, Payload: payload}
 	b.Lock()
@@ -97,6 +106,7 @@ func (b *Group) Insert(key string, payload []byte) error {
 	return nil
 }
 
+// delete removes an element from the group
 func (b *Group) delete(key string) {
 	element := &Element{Key: key, Payload: nil}
 	delete(b.Elements, element.Key)
@@ -111,12 +121,14 @@ func (b *Group) delete(key string) {
 	}
 }
 
+// Delete removes an element from the group
 func (b *Group) Delete(key string) {
 	b.Lock()
 	defer b.Unlock()
 	b.delete(key)
 }
 
+// Match returns the key-value pair closest to the given key in a group
 func (b *Group) Match(key string) (string, []byte, error) {
 	crc := b.hash(key)
 	b.RLock()
@@ -129,6 +141,7 @@ func (b *Group) Match(key string) (string, []byte, error) {
 	return "", nil, ErrNoResultMatched
 }
 
+// GetElements get all elements from the group
 func (b *Group) GetElements() []*Element {
 	b.RLock()
 	defer b.RUnlock()

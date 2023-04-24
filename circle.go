@@ -52,7 +52,7 @@ func (idx Circle) Search(target uint32) (int, bool) {
 
 // Match returns the index of the element in the slice that is closest to target.
 // If target is greater than all elements in the slice, it returns the last index;
-// if target is less than all elements in the slice, it returns the first index.
+// if target is less than all elements in the slice, it returns the last index.
 func (idx Circle) Match(target uint32) (int, bool) {
 	if len(idx) == 0 {
 		return 0, false

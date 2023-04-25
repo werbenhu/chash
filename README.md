@@ -2,7 +2,7 @@
 <div align='center'>
 <a href="https://github.com/werbenhu/chash/actions"><img src="https://github.com/werbenhu/chash/workflows/Go/badge.svg"></a>
 <a href="https://coveralls.io/github/werbenhu/chash?branch=main"><img src="https://coveralls.io/repos/github/werbenhu/chash/badge.svg?branch=main"></a>  
- <a href="https://goreportcard.com/badge/github.com/werbenhu/chash"><img src="https://goreportcard.com/report/github.com/werbenhu/chash"></a>
+<a href="https://goreportcard.com/report/github.com/werbenhu/chash"><img src="https://goreportcard.com/badge/github.com/werbenhu/chash"></a>
 <a href="https://github.com/werbenhu/chash"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
 <a href="https://pkg.go.dev/github.com/werbenhu/chash"><img src="https://pkg.go.dev/badge/github.com/werbenhu/chash.svg"></a>
 </div>

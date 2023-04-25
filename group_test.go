@@ -86,7 +86,7 @@ func TestGroupDelete(t *testing.T) {
 
 func TestGroupMatch(t *testing.T) {
 	group := NewGroup("test", 10000)
-	key, payload, err := group.Match("werbenhuxxxxx")
+	_, _, err := group.Match("werbenhuxxxxx")
 	assert.NotNil(t, err)
 	assert.Equal(t, ErrNoResultMatched, err)
 
@@ -96,7 +96,7 @@ func TestGroupMatch(t *testing.T) {
 	assert.Equal(t, 10000, len(group.rows))
 	assert.Equal(t, 1, len(group.Elements))
 
-	key, payload, err = group.Match("werbenhuxxxxx")
+	key, payload, err := group.Match("werbenhuxxxxx")
 	assert.Nil(t, err)
 	assert.NotNil(t, payload)
 	assert.NotEqual(t, key, "")

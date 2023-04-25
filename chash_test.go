@@ -185,7 +185,7 @@ func TestCHashMatch(t *testing.T) {
 	group, err := hash.CreateGroup("test", 10000)
 	assert.Nil(t, err)
 
-	key, payload, err = hash.Match("test", "werbenhuxxxxx")
+	_, _, err = hash.Match("test", "werbenhuxxxxx")
 	assert.NotNil(t, err)
 	assert.Equal(t, ErrNoResultMatched, err)
 

@@ -44,7 +44,7 @@ With Go module support, simply add the following import
 ## Simple Usage
 
 ### Create a group
-```
+```go
 // Create a "db" group using chash.CreateGroup(),
 // which internally manages the group using a global singleton chash object.
 dbGroup, _ := chash.CreateGroup("db", 10000)
@@ -79,7 +79,7 @@ host, info, err := dbGroup.Match("user-id")
 ```
 
 ### Delete element from a group
-```
+```go
 // delete element
 dbGroup.Delete("192.168.1.102:3306")
 ```
@@ -90,7 +90,7 @@ elements := dbGroup.GetElemens()
 ```
 
 ### Using an independent group
-```
+```go
 // A group created by chash.NewGrou() is not managed by the global chash object
 // You need to manage groups yourself if there are more than one group.
 group := chash.NewGroup("db", 10000)

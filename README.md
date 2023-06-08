@@ -61,7 +61,7 @@ webGroup.Insert("192.168.2.100:80", []byte("web0-info"))
 webGroup.Insert("192.168.2.101:80", []byte("web1-info"))
 ```
 
-```
+```go
 // Use an existing group.
 dbGroup, err := chash.GetGroup("db")
 if err != nil {
@@ -73,7 +73,7 @@ host, info, err := dbGroup.Match("user-id")
 ```
 
 ### Match a MySQL server for a user ID
-```
+```go
 // match an element close to where key hashes to in the circle.
 host, info, err := dbGroup.Match("user-id")
 ```
@@ -85,7 +85,7 @@ dbGroup.Delete("192.168.1.102:3306")
 ```
 
 ### Get all elements of a group
-```
+```go
 elements := dbGroup.GetElemens()
 ```
 

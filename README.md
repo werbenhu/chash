@@ -35,7 +35,7 @@ With Go module support, simply add the following import
 
 ### Create a group
 ```go
-// Create a "db" group using chash.CreateGroup(),
+// Create a group named "db" with 10000 virtual elements for each key
 // which internally manages the group using a global singleton chash object.
 dbGroup, _ := chash.CreateGroup("db", 10000)
 

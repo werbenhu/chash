@@ -39,7 +39,7 @@
 
 ### 创建一个组
 ```
-// 创建db组，通过chash.CreateGroup()创建组，
+// 创建db组，通过chash.CreateGroup()创建组，并指定每个节点的虚拟节点数量为10000
 // 内部会有一个全局的单例chash对象管理组
 dbGroup, _ := chash.CreateGroup("db", 10000)
 

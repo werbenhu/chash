@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	// create a group named db
+	// Create a group named "db" with 10000 virtual elements for each key
 	dbHash, _ := chash.CreateGroup("db", 10000)
 
 	// insert three mysql server elements
